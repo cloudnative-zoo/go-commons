@@ -1,4 +1,6 @@
 version: "3"
+vars:
+  - VERSION: "0.1.1"
 tasks:
   pre-commit:
     desc: Run pre-commit checks
@@ -41,3 +43,10 @@ tasks:
       - task: gofmt
       - task: govet
       - task: golangci-lint
+
+  git-tag-push:
+    desc: Tag and push to git
+    cmds:
+      - git tag -a v$(cat VERSION) -m "Release v$(cat VERSION)"
+      - git push origin v$(cat VERSION)
+      - echo "Tag and push done"
