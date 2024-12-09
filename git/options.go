@@ -4,26 +4,28 @@ import (
 	"errors"
 
 	"github.com/go-git/go-git/v5/plumbing/protocol/packp/sideband"
-
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
+// Option defines a functional option for configuring the Service.
 type Option func(s *Service) error
 
+// WithToken sets HTTP Basic Authentication using the provided personal access token.
 func WithToken(token string) Option {
 	return func(s *Service) error {
 		if token == "" {
 			return errors.New("token cannot be empty")
 		}
 		s.auth = &http.BasicAuth{
-			Username: "git",
+			Username: "faker", // Uses "faker" as the username for token authentication
 			Password: token,
 		}
 		return nil
 	}
 }
 
+// WithURL sets the repository clone URL.
 func WithURL(url string) Option {
 	return func(s *Service) error {
 		if url == "" {
@@ -34,6 +36,7 @@ func WithURL(url string) Option {
 	}
 }
 
+// WithSSHKeyPath sets SSH authentication using a private key file.
 func WithSSHKeyPath(path string, passphrase string) Option {
 	return func(s *Service) error {
 		if path == "" {
@@ -48,6 +51,7 @@ func WithSSHKeyPath(path string, passphrase string) Option {
 	}
 }
 
+// WithSSHKey sets SSH authentication using an in-memory private key.
 func WithSSHKey(key []byte, passphrase string) Option {
 	return func(s *Service) error {
 		if len(key) == 0 {
@@ -62,6 +66,7 @@ func WithSSHKey(key []byte, passphrase string) Option {
 	}
 }
 
+// WithRepoPath sets the local path where the repository will be cloned or updated.
 func WithRepoPath(path string) Option {
 	return func(s *Service) error {
 		if path == "" {
@@ -72,6 +77,7 @@ func WithRepoPath(path string) Option {
 	}
 }
 
+// WithBranch sets the branch to be used for operations.
 func WithBranch(branch string) Option {
 	return func(s *Service) error {
 		s.branch = branch
@@ -79,6 +85,7 @@ func WithBranch(branch string) Option {
 	}
 }
 
+// WithProgress sets a progress writer for operations like clone and fetch.
 func WithProgress(progress sideband.Progress) Option {
 	return func(s *Service) error {
 		s.progress = progress

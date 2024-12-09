@@ -1,12 +1,15 @@
 # go-commons
 
-`go-commons` is a versatile collection of utility packages that simplify common tasks related to Git and GitHub. 
+`go-commons` is a versatile collection of utility packages that simplify common tasks related to Cli,Git and GitHub.
 
-It provides high-level abstractions for Git operations, GitHub API interactions, and general development utilities like directory management and environment variable handling.
-
+For examples check the [examples](examples) directory.
 ---
 
 ## Features
+
+### **CLI Commands**
+
+Easily create CLI commands with `Cobra` to perform common tasks.
 
 ### **GitHub API Integration**
 Easily interact with GitHub using the `go-github` library. Key features include:
@@ -37,6 +40,49 @@ go get -u github.com/cloudnative-zoo/go-commons
 ---
 
 ## Usage
+
+### **CLI Command Example**
+
+```go
+package main
+
+import (
+   "fmt"
+   "github.com/spf13/cobra"
+   "github.com/cloudnative-zoo/go-commons/cli"
+)
+
+func main() {
+   rootCmd := cli.NewCommand(cli.CommandConfig{
+      Use:   "app",
+      Short: "A sample CLI app",
+      Long:  "This is a sample CLI app demonstrating the usage of the NewCommand function",
+      Run: func(cmd *cobra.Command, args []string) {
+         fmt.Println("App executed!")
+      },
+      Flags: []cli.FlagConfig{
+         {
+            Name:         "name",
+            Short:        "n",
+            DefaultValue: "World",
+            Usage:        "Specify the name",
+            Required:     false,
+         },
+         {
+            Name:         "verbose",
+            Short:        "v",
+            DefaultValue: false,
+            Usage:        "Enable verbose mode",
+            Required:     false,
+         },
+      },
+   })
+
+   if err := rootCmd.Execute(); err != nil {
+      fmt.Println(err)
+   }
+}
+```
 
 ### **GitHub API Service Example**
 
