@@ -1,0 +1,43 @@
+version: "3"
+tasks:
+  pre-commit:
+    desc: Run pre-commit checks
+    cmds:
+      - pre-commit autoupdate
+      - pre-commit run --all-files
+  gomod-update:
+    desc: Update go modules
+    cmds:
+      - echo "Updating go modules"
+      - go get -u ./... && go mod tidy
+      - echo "Go modules updated"
+
+  gofmt:
+    desc: Format go code
+    cmds:
+      - echo "Formatting go code"
+      - gofumpt -l -w .
+      - echo "Go code formatted"
+
+  govet:
+    desc: Run go vet
+    cmds:
+      - echo "Running go vet"
+      - go vet -v ./...
+      - echo "Go vet done"
+
+  golangci-lint:
+    desc: Run golangci-lint
+    cmds:
+      - echo "Running golangci-lint"
+      - golangci-lint run  --timeout=10m
+      - echo "Golangci-lint done"
+
+  lint-fmt:
+    desc: Run go lint and fmt
+    cmds:
+      - task: pre-commit
+      - task: gomod-update
+      - task: gofmt
+      - task: govet
+      - task: golangci-lint
