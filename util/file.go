@@ -17,7 +17,6 @@ func DefaultSSHKey() string {
 		return defaultIDRSA
 	} else if FileExists(defaultIDED25519) {
 		return defaultIDED25519
-	} else {
-		return ""
 	}
+	return ""
 }

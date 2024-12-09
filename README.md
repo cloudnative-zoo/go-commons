@@ -2,7 +2,7 @@
 
 `go-commons` is a versatile collection of utility packages that simplify common tasks related to Cli,Git and GitHub.
 
-For examples check the [examples](examples) directory.
+For examples check the [examples](_examples) directory.
 ---
 
 ## Features

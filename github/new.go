@@ -1,6 +1,7 @@
 package github
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -18,7 +19,7 @@ func New(options ...Option) (*Service, error) {
 
 	// Ensure the GitHub client is configured.
 	if s.client == nil {
-		return nil, fmt.Errorf("github client is not configured; provide a valid token using WithToken")
+		return nil, errors.New("missing GitHub client configuration")
 	}
 
 	return s, nil

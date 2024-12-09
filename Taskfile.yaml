@@ -21,7 +21,7 @@ tasks:
     desc: Format Go code
     cmds:
       - echo "Formatting Go code"
-      - gofumpt -l -w .
+      - go fmt ./...
       - echo "Go code formatted"
 
   govet:
@@ -35,7 +35,7 @@ tasks:
     desc: Run golangci-lint
     cmds:
       - echo "Running golangci-lint"
-      - golangci-lint run --timeout=10m
+      - golangci-lint run  --out-format colored-line-number --path-prefix ./...
       - echo "Golangci-lint done"
 
   lint-fmt:
