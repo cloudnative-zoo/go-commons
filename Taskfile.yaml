@@ -1,12 +1,15 @@
 version: "3"
+
 vars:
-  - VERSION: "0.1.1"
+  VERSION: "0.1.1"
+
 tasks:
   pre-commit:
     desc: Run pre-commit checks
     cmds:
       - pre-commit autoupdate
       - pre-commit run --all-files
+
   gomod-update:
     desc: Update go modules
     cmds:
@@ -15,16 +18,16 @@ tasks:
       - echo "Go modules updated"
 
   gofmt:
-    desc: Format go code
+    desc: Format Go code
     cmds:
-      - echo "Formatting go code"
+      - echo "Formatting Go code"
       - gofumpt -l -w .
       - echo "Go code formatted"
 
   govet:
-    desc: Run go vet
+    desc: Run Go vet
     cmds:
-      - echo "Running go vet"
+      - echo "Running Go vet"
       - go vet -v ./...
       - echo "Go vet done"
 
@@ -32,11 +35,11 @@ tasks:
     desc: Run golangci-lint
     cmds:
       - echo "Running golangci-lint"
-      - golangci-lint run  --timeout=10m
+      - golangci-lint run --timeout=10m
       - echo "Golangci-lint done"
 
   lint-fmt:
-    desc: Run go lint and fmt
+    desc: Run all lint and formatting tasks
     cmds:
       - task: pre-commit
       - task: gomod-update
@@ -45,8 +48,9 @@ tasks:
       - task: golangci-lint
 
   git-tag-push:
-    desc: Tag and push to git
+    desc: Tag and push to Git
     cmds:
-      - git tag -a v$(cat VERSION) -m "Release v$(cat VERSION)"
-      - git push origin v$(cat VERSION)
+      - echo "Tagging version v{{.VERSION}}"
+      - git tag -a v{{.VERSION}} -m "Release v{{.VERSION}}"
+      - git push origin v{{.VERSION}}
       - echo "Tag and push done"
