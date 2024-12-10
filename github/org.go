@@ -12,7 +12,7 @@ import (
 // Results are paginated and combined into a single list.
 func (s *Service) ListOrganizations(ctx context.Context) ([]*github.Organization, error) {
 	var orgs []*github.Organization
-	opts := &github.ListOptions{PerPage: 50}
+	opts := &github.ListOptions{PerPage: s.paginationMaxLimit}
 
 	for {
 		organizations, resp, err := s.client.Organizations.List(ctx, "", opts)

@@ -5,5 +5,6 @@ import (
 )
 
 type Service struct {
-	client *github.Client
+	client             *github.Client
+	paginationMaxLimit int
 }
