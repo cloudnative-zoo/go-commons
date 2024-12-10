@@ -3,6 +3,7 @@ run:
     - integration
   timeout: 10m
 linters:
+  disable-all: true
   enable:
     - dogsled
     - dupl
@@ -21,7 +22,26 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    - bodyclose
+    - errcheck
+    - copyloopvar
+    - funlen
+    - gochecknoinits
+    - goconst
+    - gocyclo
+    - mnd
+    - goprintffuncname
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - noctx
+    - nolintlint
+    - typecheck
+    - unused
 linters-settings:
+  lll:
+    line-length: 300
   gocritic:
     disable-all: true
     enabled-checks:
@@ -75,11 +95,6 @@ issues:
         - dogsled
       path: _test\.go
 
-    # We need to pass nil Context in order to test DoBare erroring on nil ctx.
-    - linters: [ staticcheck ]
-      text: 'SA1012: do not pass a nil Context'
-      path: _test\.go
-
     # We need to use sha1 for validating signatures
     - linters: [ gosec ]
       text: 'G505: Blocklisted import crypto/sha1: weak cryptographic primitive'
@@ -92,11 +107,7 @@ issues:
     # We don't care about file inclusion via variable in examples or internal tools.
     - linters: [ gosec ]
       text: 'G304: Potential file inclusion via variable'
-      path: '^(example|tools)\/'
-
-    # We don't run parallel integration tests
-    - linters: [ paralleltest, tparallel ]
-      path: '^test/integration'
+      path: '^(_examples|tools)\/'
 
     # Because fmt.Sprint(reset.Unix())) is more readable than strconv.FormatInt(reset.Unix(), 10).
     - linters: [ perfsprint ]

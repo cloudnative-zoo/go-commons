@@ -9,6 +9,7 @@ import (
 	"github.com/google/go-github/v67/github"
 )
 
+// Option defines a function signature for configuring a GitHub Service instance.
 type Option func(*Service) error
 
 // WithToken sets up authentication for the GitHub client using a personal access token.
@@ -33,6 +34,14 @@ func WithToken(token string) Option {
 
 		// Initialize the GitHub client with the provided token.
 		s.client = github.NewClient(rateLimiter).WithAuthToken(token)
+		return nil
+	}
+}
+
+// WithPaginationMaxLimit sets the maximum number of items to request per page when paginating through results.
+func WithPaginationMaxLimit(limit int) Option {
+	return func(s *Service) error {
+		s.paginationMaxLimit = limit
 		return nil
 	}
 }

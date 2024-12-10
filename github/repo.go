@@ -49,7 +49,7 @@ func (s *Service) ListUserRepositories(ctx context.Context) ([]*github.Repositor
 // listRepositories is a helper function for paginated repository fetching.
 func (s *Service) listRepositories(listFunc func(github.ListOptions) ([]*github.Repository, *github.Response, error)) ([]*github.Repository, error) {
 	var repositories []*github.Repository
-	opts := github.ListOptions{PerPage: 50}
+	opts := github.ListOptions{PerPage: s.paginationMaxLimit}
 
 	for {
 		repos, resp, err := listFunc(opts)
