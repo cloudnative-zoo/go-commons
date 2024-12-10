@@ -11,7 +11,7 @@ import (
 func (s *Service) GetLatestRelease(ctx context.Context, owner, repo string) (*github.RepositoryRelease, error) {
 	release, _, err := s.client.Repositories.GetLatestRelease(ctx, owner, repo)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get latest release: %w", err)
+		return nil, fmt.Errorf("failed to get latest release for %s/%s: %w", owner, repo, err)
 	}
 	return release, nil
 }
@@ -20,7 +20,7 @@ func (s *Service) GetLatestRelease(ctx context.Context, owner, repo string) (*gi
 func (s *Service) GetReleaseByTag(ctx context.Context, owner, repo, tag string) (*github.RepositoryRelease, error) {
 	release, _, err := s.client.Repositories.GetReleaseByTag(ctx, owner, repo, tag)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get release: %w", err)
+		return nil, fmt.Errorf("failed to get release %s for %s/%s: %w", tag, owner, repo, err)
 	}
 	return release, nil
 }
