@@ -31,9 +31,23 @@ func main() {
 				Required:     false,
 			},
 		},
+		SubCommands: []*cobra.Command{
+			subCmd(),
+		},
 	})
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 	}
+}
+
+func subCmd() *cobra.Command {
+	return cli.NewCommand(cli.CommandConfig{
+		Use:   "app",
+		Short: "A sample CLI app",
+		Long:  "This is a sample CLI app demonstrating the usage of the NewCommand function",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("App executed!")
+		},
+	})
 }
