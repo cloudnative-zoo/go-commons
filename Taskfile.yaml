@@ -6,52 +6,72 @@ vars:
 tasks:
   pre-commit:
     desc: Run pre-commit checks
+    silent: true
     cmds:
-      - pre-commit autoupdate
-      - pre-commit run --all-files
+      - echo "Starting pre-commit checks..."
+      - pre-commit autoupdate || (echo "Failed to autoupdate pre-commit"; exit 1)
+      - pre-commit run --all-files || (echo "Pre-commit checks failed"; exit 1)
+      - echo "Pre-commit checks completed successfully"
 
   gomod-update:
-    desc: Update go modules
+    desc: Update Go modules
+    silent: true
     cmds:
-      - echo "Updating go modules"
-      - go get -u ./... && go mod tidy
-      - echo "Go modules updated"
+      - echo "Updating Go modules..."
+      - go get -d -v -u all && go mod tidy || (echo "Go module update failed"; exit 1)
+      - echo "Go modules updated successfully"
 
   gofmt:
     desc: Format Go code
+    silent: true
     cmds:
-      - echo "Formatting Go code"
-      - go fmt ./...
-      - goimports -w .
-      - echo "Go code formatted"
+      - echo "Formatting Go code..."
+      - go fmt ./... || (echo "go fmt failed"; exit 1)
+      - goimports -w . || (echo "goimports failed"; exit 1)
+      - echo "Go code formatting completed successfully"
 
   govet:
     desc: Run Go vet
+    silent: true
     cmds:
-      - echo "Running Go vet"
-      - go vet -v ./...
-      - echo "Go vet done"
+      - echo "Running Go vet..."
+      - go vet -v ./... || (echo "Go vet found issues"; exit 1)
+      - echo "Go vet completed successfully"
 
   golangci-lint:
     desc: Run golangci-lint
+    silent: true
     cmds:
-      - echo "Running golangci-lint"
-      - golangci-lint run  --out-format colored-line-number --path-prefix ./...
-      - echo "Golangci-lint done"
+      - echo "Running golangci-lint..."
+      - golangci-lint run --out-format colored-line-number || (echo "golangci-lint failed"; exit 1)
+      - echo "golangci-lint completed successfully"
 
   lint-fmt:
     desc: Run all lint and formatting tasks
+    silent: true
     cmds:
+      - echo "Starting all lint and formatting tasks..."
       - task: pre-commit
       - task: gomod-update
       - task: gofmt
       - task: govet
       - task: golangci-lint
+      - echo "All lint and formatting tasks completed successfully"
 
   git-tag-push:
+    silent: true
     desc: Tag and push to Git
     cmds:
-      - echo "Tagging version v{{.VERSION}}"
-      - git tag -a v{{.VERSION}} -m "Release v{{.VERSION}}"
-      - git push origin v{{.VERSION}}
-      - echo "Tag and push done"
+      - echo "Creating and pushing Git tag for version v{{.VERSION}}..."
+      - git tag -a v{{.VERSION}} -m "Release v{{.VERSION}}" || (echo "Git tagging failed"; exit 1)
+      - git push origin v{{.VERSION}} || (echo "Failed to push Git tag"; exit 1)
+      - echo "Git tag v{{.VERSION}} created and pushed successfully"
+
+  all:
+    silent: true
+    desc: Run the full workflow (lint, format, tag, and push)
+    cmds:
+      - echo "Starting full workflow..."
+      - task: lint-fmt
+      - task: git-tag-push
+      - echo "Full workflow completed successfully"
