@@ -60,11 +60,3 @@ jobs:
         with:
           version: latest
           args: --timeout=10m --out-format colored-line-number
-
-      # Build the release (snapshot mode for testing)
-      - name: Build with GoReleaser (Snapshot)
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          distribution: goreleaser
-          version: latest
-          args: build --skip=before --skip=validate --snapshot
