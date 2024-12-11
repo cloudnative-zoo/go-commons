@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/cloudnative-zoo/go-commons/compare/v0.2.1...v0.2.2) (2024-12-11)
+
+
+### Bug Fixes
+
+* improved cli example ([#7](https://github.com/cloudnative-zoo/go-commons/issues/7)) ([6a5edde](https://github.com/cloudnative-zoo/go-commons/commit/6a5edde582b0c44f3ffb473952192bb6205897f8))
+
 ## [0.2.1](https://github.com/cloudnative-zoo/go-commons/compare/v0.2.0...v0.2.1) (2024-12-11)
 
 
