@@ -18,7 +18,7 @@ tasks:
     silent: true
     cmds:
       - echo "Updating Go modules..."
-      - go get -d -v -u all && go mod tidy || (echo "Go module update failed"; exit 1)
+      - go get -v -u all && go mod tidy || (echo "Go module update failed"; exit 1)
       - echo "Go modules updated successfully"
 
   gofmt:
@@ -58,20 +58,10 @@ tasks:
       - task: golangci-lint
       - echo "All lint and formatting tasks completed successfully"
 
-  git-tag-push:
-    silent: true
-    desc: Tag and push to Git
-    cmds:
-      - echo "Creating and pushing Git tag for version v{{.VERSION}}..."
-      - git tag -a v{{.VERSION}} -m "Release v{{.VERSION}}" || (echo "Git tagging failed"; exit 1)
-      - git push origin v{{.VERSION}} || (echo "Failed to push Git tag"; exit 1)
-      - echo "Git tag v{{.VERSION}} created and pushed successfully"
-
   all:
     silent: true
     desc: Run the full workflow (lint, format, tag, and push)
     cmds:
       - echo "Starting full workflow..."
       - task: lint-fmt
-      - task: git-tag-push
       - echo "Full workflow completed successfully"
