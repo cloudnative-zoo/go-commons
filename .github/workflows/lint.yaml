@@ -38,6 +38,9 @@ jobs:
       - name: Install Dependencies
         run: go mod download
 
+      - name: Add Go binaries to PATH
+        run: echo "PATH=$PATH:/home/runner/go/bin" >> $GITHUB_ENV
+
       # Run pre-commit hooks
       - name: Run Pre-Commit Hooks
         uses: pre-commit/action@v3.0.1
