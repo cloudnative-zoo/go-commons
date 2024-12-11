@@ -38,8 +38,9 @@ jobs:
       - name: Install Dependencies
         run: go mod download
 
-      - name: Add Go binaries to PATH
-        run: echo "PATH=$PATH:/home/runner/go/bin" >> $GITHUB_ENV
+      # Install goimports (required by pre-commit hooks)
+      - name: Install goimports
+        run: go install golang.org/x/tools/cmd/goimports@latest
 
       # Run pre-commit hooks
       - name: Run Pre-Commit Hooks
