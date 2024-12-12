@@ -9,6 +9,10 @@ import (
 const (
 	// DefaultPaginationMaxLimit is the default maximum number of items to request per page when paginating through results.
 	DefaultPaginationMaxLimit = 500
+	// DefaultPage is the default page number to request when paginating through results.
+	DefaultPage = 1
+	// Sort by ascending order.
+	Sort = "asc"
 )
 
 // New initializes a new GitHub Service instance with the provided options.

@@ -7,4 +7,5 @@ import (
 type Service struct {
 	client             *gitlab.Client
 	paginationMaxLimit int
+	listOptions        *gitlab.ListOptions
 }

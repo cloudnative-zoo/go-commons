@@ -16,13 +16,13 @@ func main() {
 
 	userId, err := svc.GetUserID()
 	if err != nil {
-		slog.Error("failed to get user id: %w", err)
+		slog.Error("failed to get user id", slog.Any("error", err))
 	}
-	slog.Info("user id: %d", userId)
+	slog.With("UserID", userId).Info("user id")
 
 	projects, err := svc.ListOwnedProjects()
 	if err != nil {
-		slog.Error("failed to list projects: %w", err)
+		slog.Error("failed to list projects", slog.Any("error", err))
 	}
 
 	for _, project := range projects {

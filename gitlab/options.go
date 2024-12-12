@@ -32,6 +32,20 @@ func WithToken(token string) Option {
 		if err != nil {
 			return fmt.Errorf("failed to create Gitlab client: %w", err)
 		}
+
+		if s.paginationMaxLimit == 0 {
+			s.paginationMaxLimit = DefaultPaginationMaxLimit
+		}
+
+		// Set list options for pagination.
+		if s.listOptions == nil {
+			s.listOptions = &gitlab.ListOptions{
+				PerPage: s.paginationMaxLimit,
+				Page:    DefaultPage,
+				Sort:    Sort,
+			}
+		}
+
 		return nil
 	}
 }
