@@ -1,6 +1,6 @@
 module github.com/cloudnative-zoo/go-commons
 
-go 1.23.3
+go 1.23.4
 
 require (
 	github.com/go-git/go-git/v5 v5.12.0
@@ -8,7 +8,7 @@ require (
 	github.com/google/go-github/v67 v67.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
-	gitlab.com/gitlab-org/api/client-go v0.116.0
+	gitlab.com/gitlab-org/api/client-go v0.118.0
 )
 
 require (
