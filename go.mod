@@ -6,6 +6,7 @@ require (
 	github.com/go-git/go-git/v5 v5.12.0
 	github.com/gofri/go-github-ratelimit v1.1.0
 	github.com/google/go-github/v67 v67.0.0
+	github.com/google/go-github/v68 v68.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	gitlab.com/gitlab-org/api/client-go v0.116.0
