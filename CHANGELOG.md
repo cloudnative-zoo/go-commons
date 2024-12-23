@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/cloudnative-zoo/go-commons/compare/v0.2.3...v0.2.4) (2024-12-23)
+
+
+### Bug Fixes
+
+* corrected github action ([#14](https://github.com/cloudnative-zoo/go-commons/issues/14)) ([1a854f3](https://github.com/cloudnative-zoo/go-commons/commit/1a854f368ace56abd3ef1fee16d07b090d00ebb7))
+
 ## [0.2.3](https://github.com/cloudnative-zoo/go-commons/compare/v0.2.2...v0.2.3) (2024-12-12)
 
 
