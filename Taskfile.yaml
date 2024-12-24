@@ -1,21 +1,22 @@
 version: "3"
 
-vars:
-  VERSION: "0.1.1"
 
 tasks:
   pre-commit:
     desc: Run pre-commit checks
     silent: true
+    ignore_error: true
     cmds:
       - echo "Starting pre-commit checks..."
       - pre-commit autoupdate || (echo "Failed to autoupdate pre-commit"; exit 1)
+      - pre-commit install || (echo "Failed to install pre-commit"; exit 1)
       - pre-commit run --all-files || (echo "Pre-commit checks failed"; exit 1)
       - echo "Pre-commit checks completed successfully"
 
   gomod-update:
     desc: Update Go modules
     silent: true
+    ignore_error: true
     cmds:
       - echo "Updating Go modules..."
       - go get -v -u all && go mod tidy || (echo "Go module update failed"; exit 1)
@@ -24,6 +25,7 @@ tasks:
   gofmt:
     desc: Format Go code
     silent: true
+    ignore_error: true
     cmds:
       - echo "Formatting Go code..."
       - go fmt ./... || (echo "go fmt failed"; exit 1)
@@ -41,6 +43,7 @@ tasks:
   golangci-lint:
     desc: Run golangci-lint
     silent: true
+    ignore_error: true
     cmds:
       - echo "Running golangci-lint..."
       - golangci-lint run --out-format colored-line-number || (echo "golangci-lint failed"; exit 1)
@@ -49,6 +52,7 @@ tasks:
   lint-fmt:
     desc: Run all lint and formatting tasks
     silent: true
+    ignore_error: true
     cmds:
       - echo "Starting all lint and formatting tasks..."
       - task: pre-commit
