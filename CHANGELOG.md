@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.2.4...v0.3.0) (2024-12-24)
+
+
+### Features
+
+* added github pr functionality ([#16](https://github.com/cloudnative-zoo/go-commons/issues/16)) ([d156698](https://github.com/cloudnative-zoo/go-commons/commit/d1566982011b55de61eaa49cade486cedcf49322))
+
 ## [0.2.4](https://github.com/cloudnative-zoo/go-commons/compare/v0.2.3...v0.2.4) (2024-12-23)
 
 
