@@ -47,7 +47,7 @@ func ListOpenPullRequestsAndMerge(ctx context.Context, svc *github.Service, owne
 		result, err := svc.MergePullRequest(ctx, owner, repo, pr.GetNumber())
 		if err != nil {
 			slog.With("error", err).Error("failed to merge pull request")
-			return
+			slog.With("error", err).Error("failed to merge pull request")
 		}
 		slog.With("PR#", pr.GetNumber(), "merged", result.GetMerged(), "message", result.GetMessage()).Info("pull request merge result")
 	}
