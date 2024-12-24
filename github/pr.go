@@ -32,9 +32,13 @@ func (s *Service) GetPullRequest(ctx context.Context, owner, repo string, number
 
 // MergePullRequest merges a pull request by its number.
 // Returns the merged pull request.
-func (s *Service) MergePullRequest(ctx context.Context, owner, repo string, number int) (*github.PullRequestMergeResult, error) {
+// The merge method can be one of "merge", "squash", or "rebase". if empty, "squash" is used.
+func (s *Service) MergePullRequest(ctx context.Context, owner, repo string, number int, mergeMethod string) (*github.PullRequestMergeResult, error) {
+	if mergeMethod == "" {
+		mergeMethod = "squash"
+	}
 	opts := &github.PullRequestOptions{
-		MergeMethod: "squash",
+		MergeMethod: mergeMethod,
 	}
 	pr, _, err := s.client.PullRequests.Merge(ctx, owner, repo, number, "", opts)
 	if err != nil {
