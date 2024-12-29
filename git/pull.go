@@ -17,7 +17,7 @@ func (s *Service) Pull(ctx context.Context) error {
 		return fmt.Errorf("failed to access worktree for repository: %w", err)
 	}
 
-	// Configure pull options.
+	// Configure pull opts.
 	pullOptions := &git.PullOptions{
 		RemoteName: "origin",   // Default remote name
 		Auth:       s.auth,     // Authentication credentials
