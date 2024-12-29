@@ -3,7 +3,7 @@ module github.com/cloudnative-zoo/go-commons
 go 1.23.4
 
 require (
-	github.com/go-git/go-git/v5 v5.12.0
+	github.com/go-git/go-git/v5 v5.13.0
 	github.com/gofri/go-github-ratelimit v1.1.0
 	github.com/google/go-github/v68 v68.0.0
 	github.com/spf13/cobra v1.8.1
