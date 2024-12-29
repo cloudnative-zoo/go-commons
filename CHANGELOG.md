@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.3.0...v0.4.0) (2024-12-29)
+
+
+### Features
+
+* Add Gemini and Git Status support ([#19](https://github.com/cloudnative-zoo/go-commons/issues/19)) ([9af48fa](https://github.com/cloudnative-zoo/go-commons/commit/9af48faced2410d51b15b074c5b5a763dbbf6bcf))
+
 ## [0.3.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.2.4...v0.3.0) (2024-12-24)
 
 
