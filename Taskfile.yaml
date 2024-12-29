@@ -19,7 +19,7 @@ tasks:
     ignore_error: true
     cmds:
       - echo "Updating Go modules..."
-      - go get -v -u all && go mod tidy || (echo "Go module update failed"; exit 1)
+      - go get -v -u all && go get -u ./... && go mod tidy || (echo "Go module update failed"; exit 1)
       - echo "Go modules updated successfully"
 
   gofmt:
