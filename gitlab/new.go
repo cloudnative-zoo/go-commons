@@ -15,13 +15,13 @@ const (
 	Sort = "asc"
 )
 
-// New initializes a new GitHub Service instance with the provided options.
+// New initializes a new GitHub Service instance with the provided opts.
 // At least one option must configure a GitHub client (e.g., WithToken).
-func New(options ...Option) (*Service, error) {
+func New(opts ...Options) (*Service, error) {
 	s := &Service{}
 
 	// Apply each option to configure the service.
-	for _, opt := range options {
+	for _, opt := range opts {
 		if err := opt(s); err != nil {
 			return nil, fmt.Errorf("failed to apply option: %w", err)
 		}

@@ -8,11 +8,11 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
-// Option defines a functional option for configuring the Service.
-type Option func(s *Service) error
+// Options defines a functional option for configuring the Service.
+type Options func(s *Service) error
 
 // WithToken sets HTTP Basic Authentication using the provided personal access token.
-func WithToken(token string) Option {
+func WithToken(token string) Options {
 	return func(s *Service) error {
 		if token == "" {
 			return errors.New("token cannot be empty")
@@ -26,7 +26,7 @@ func WithToken(token string) Option {
 }
 
 // WithURL sets the repository clone URL.
-func WithURL(url string) Option {
+func WithURL(url string) Options {
 	return func(s *Service) error {
 		if url == "" {
 			return errors.New("url cannot be empty")
@@ -37,7 +37,7 @@ func WithURL(url string) Option {
 }
 
 // WithSSHKeyPath sets SSH authentication using a private key file.
-func WithSSHKeyPath(path string, passphrase string) Option {
+func WithSSHKeyPath(path string, passphrase string) Options {
 	return func(s *Service) error {
 		if path == "" {
 			return errors.New("ssh key path cannot be empty")
@@ -52,7 +52,7 @@ func WithSSHKeyPath(path string, passphrase string) Option {
 }
 
 // WithSSHKey sets SSH authentication using an in-memory private key.
-func WithSSHKey(key []byte, passphrase string) Option {
+func WithSSHKey(key []byte, passphrase string) Options {
 	return func(s *Service) error {
 		if len(key) == 0 {
 			return errors.New("ssh key cannot be empty")
@@ -67,7 +67,7 @@ func WithSSHKey(key []byte, passphrase string) Option {
 }
 
 // WithRepoPath sets the local path where the repository will be cloned or updated.
-func WithRepoPath(path string) Option {
+func WithRepoPath(path string) Options {
 	return func(s *Service) error {
 		if path == "" {
 			return errors.New("repo path cannot be empty")
@@ -78,7 +78,7 @@ func WithRepoPath(path string) Option {
 }
 
 // WithBranch sets the branch to be used for operations.
-func WithBranch(branch string) Option {
+func WithBranch(branch string) Options {
 	return func(s *Service) error {
 		s.branch = branch
 		return nil
@@ -86,7 +86,7 @@ func WithBranch(branch string) Option {
 }
 
 // WithProgress sets a progress writer for operations like clone and fetch.
-func WithProgress(progress sideband.Progress) Option {
+func WithProgress(progress sideband.Progress) Options {
 	return func(s *Service) error {
 		s.progress = progress
 		return nil

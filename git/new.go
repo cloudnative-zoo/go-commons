@@ -2,13 +2,13 @@ package git
 
 import "errors"
 
-// New initializes a new Git service instance with the provided options.
+// New initializes a new Git service instance with the provided opts.
 // It validates required fields like authentication, repository URL, and local path.
-func New(options ...Option) (*Service, error) {
+func New(opts ...Options) (*Service, error) {
 	s := &Service{}
 
 	// Apply each option to configure the service.
-	for _, opt := range options {
+	for _, opt := range opts {
 		if err := opt(s); err != nil {
 			return nil, err
 		}
