@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/cloudnative-zoo/go-commons/compare/v0.4.0...v0.4.1) (2024-12-30)
+
+
+### Bug Fixes
+
+* Add git commands & update pre-commit config ([#21](https://github.com/cloudnative-zoo/go-commons/issues/21)) ([af0d82e](https://github.com/cloudnative-zoo/go-commons/commit/af0d82e8d99bc2cb73b6a1e9e402d88138229517))
+
 ## [0.4.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.3.0...v0.4.0) (2024-12-29)
 
 
