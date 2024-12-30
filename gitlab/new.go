@@ -15,8 +15,8 @@ const (
 	Sort = "asc"
 )
 
-// New initializes a new GitHub Service instance with the provided opts.
-// At least one option must configure a GitHub client (e.g., WithToken).
+// New initializes a new Gitlab Service instance with the provided opts.
+// At least one option must configure a Gitlab client (e.g., WithToken).
 func New(opts ...Options) (*Service, error) {
 	s := &Service{}
 
@@ -27,9 +27,9 @@ func New(opts ...Options) (*Service, error) {
 		}
 	}
 
-	// Ensure the GitHub client is configured.
+	// Ensure the Gitlab client is configured.
 	if s.client == nil {
-		return nil, errors.New("missing GitHub client configuration")
+		return nil, errors.New("missing Gitlab client configuration")
 	}
 
 	// Set the default maximum number of items to request per page when paginating through results.
