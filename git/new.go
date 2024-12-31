@@ -3,6 +3,7 @@ package git
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 )
 
@@ -36,7 +37,7 @@ func New(ctx context.Context, opts ...Options) (*Service, error) {
 	if err != nil {
 		slog.With("path", service.path).Error("repository not found; attempting to clone")
 		if cloneErr := clone(ctx, service.path, service.url, service.auth, service.progress); cloneErr != nil {
-			return nil, errors.New("failed to clone repository: " + cloneErr.Error())
+			return nil, fmt.Errorf("failed to clone repository from URL %s to path %s: %w", service.url, service.path, cloneErr)
 		}
 
 		// Reopen the repository after cloning.
