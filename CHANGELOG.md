@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.4.1...v0.5.0) (2024-12-31)
+
+
+### Features
+
+* Refactor Git interaction & add helper functions ([#23](https://github.com/cloudnative-zoo/go-commons/issues/23)) ([fce525a](https://github.com/cloudnative-zoo/go-commons/commit/fce525a4a72799cdfcbf78c6eac2842f32ae7391))
+
 ## [0.4.1](https://github.com/cloudnative-zoo/go-commons/compare/v0.4.0...v0.4.1) (2024-12-30)
 
 
