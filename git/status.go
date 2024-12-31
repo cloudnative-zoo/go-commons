@@ -6,14 +6,14 @@ import (
 	"github.com/go-git/go-git/v5"
 )
 
-type StatusResult struct {
+type StatusChanges struct {
 	Added    []string
 	Modified []string
 	Deleted  []string
 }
 
 // Status represents the status of a git repository.
-func (s *Service) Status() (*StatusResult, error) {
+func (s *Service) Status() (*StatusChanges, error) {
 	// Get the working tree of the repository.
 	worktree, err := s.repo.Worktree()
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *Service) Status() (*StatusResult, error) {
 	}
 
 	// Parse the status result.
-	result := &StatusResult{}
+	result := &StatusChanges{}
 	for file, flags := range status {
 		switch {
 		case flags.Staging == git.Unmodified: // Unmodified
