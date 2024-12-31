@@ -1,41 +1,53 @@
 package git
 
 import (
+	"context"
 	"errors"
+	"fmt"
 	"log/slog"
-
-	"github.com/go-git/go-git/v5"
 )
 
-// New initializes a new Git service instance with the provided opts.
-// It validates required fields like authentication, repository URL, and local path.
-func New(opts ...Options) (*Service, error) {
-	s := &Service{}
+// New initializes a new Git service instance with the provided options.
+// It tries to open an existing repository at the specified path. If the repository does not exist, it clones it from the provided URL.
+// It validates required fields such as authentication, repository URL, and local path.
+func New(ctx context.Context, opts ...Options) (*Service, error) {
+	// Create a new Service instance.
+	service := &Service{}
 
-	// Apply each option to configure the service.
+	// Apply provided options to configure the service.
 	for _, opt := range opts {
-		if err := opt(s); err != nil {
-			return nil, err
+		if err := opt(service); err != nil {
+			return nil, errors.New("failed to apply options: " + err.Error())
 		}
 	}
 
 	// Validate required fields.
-	if s.auth == nil {
+	if service.auth == nil {
 		return nil, errors.New("authentication is required: provide a token, SSH key, or SSH key path")
 	}
-	if s.url == "" {
+	if service.url == "" {
 		return nil, errors.New("clone URL is required")
 	}
-	if s.path == "" {
+	if service.path == "" {
 		return nil, errors.New("repository path is required")
 	}
 
 	// Try to open the existing repository.
-	var err error
-	s.repo, err = git.PlainOpen(s.path)
+	repo, err := open(service.path)
 	if err != nil {
-		slog.With("path", s.path).Debug("repository does not exist; consider git clone")
+		slog.With("path", service.path).Error("repository not found; attempting to clone")
+		if cloneErr := clone(ctx, service.path, service.url, service.auth, service.progress); cloneErr != nil {
+			return nil, fmt.Errorf("failed to clone repository from URL %s to path %s: %w", service.url, service.path, cloneErr)
+		}
+
+		// Reopen the repository after cloning.
+		repo, err = open(service.path)
+		if err != nil {
+			return nil, errors.New("failed to open repository after cloning: " + err.Error())
+		}
 	}
 
-	return s, nil
+	// Assign the opened repository to the service.
+	service.repo = repo
+	return service, nil
 }

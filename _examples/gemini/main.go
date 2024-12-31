@@ -4,63 +4,155 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"os/exec"
+	"os"
+	"path"
 	"strings"
 
 	"github.com/cloudnative-zoo/go-commons/gemini"
+	"github.com/cloudnative-zoo/go-commons/git"
 	"github.com/google/generative-ai-go/genai"
+)
+
+// Constants
+const (
+	githubOrg  = "cloudnative-zoo"
+	githubRepo = "go-commons"
 )
 
 func main() {
 	ctx := context.Background()
-	// Get git changes
-	cmd := exec.Command("git", "diff", "--cached", "--name-status")
-	changes, err := cmd.Output()
-	if err != nil {
-		slog.With("error", err).Error("failed to get git changes")
-	}
 
-	changesStr := strings.TrimSpace(string(changes))
-	if changesStr == "" {
-		slog.Info("no changes to commit")
+	// Initialize services
+	changes, err := initializeGitService(ctx)
+	if err != nil {
+		slog.With("error", err).Error("failed to initialize git service")
 		return
 	}
-	geminiClient, err := gemini.New(ctx, gemini.WithAPIKey("")) // export GEMINI_API_KEY=
-	defer func(geminiClient *gemini.Service) {
-		err := geminiClient.Close()
-		if err != nil {
+
+	if changes == nil || noChanges(changes) {
+		slog.Info("repository is clean")
+		return
+	}
+
+	geminiClient, err := initializeGeminiClient(ctx)
+	if err != nil {
+		slog.With("error", err).Error("failed to initialize gemini client")
+		return
+	}
+	defer cleanupGeminiClient(geminiClient)
+	// Generate and process commit message
+	if err := generateCommitMessageWithBranch(ctx, geminiClient, changes); err != nil {
+		slog.With("error", err).Error("failed to generate commit message")
+	}
+}
+
+func initializeGitService(ctx context.Context) (*git.StatusChanges, error) {
+	homeDir := os.Getenv("HOME")
+	repoPath := path.Join(homeDir, "development", githubOrg, githubRepo)
+
+	// Initialize Git service
+	gitSvc, err := git.New(
+		ctx,
+		git.WithSSHKeyPath(path.Join(homeDir, ".ssh", "github_hassnatahmad"), ""),
+		git.WithRepoPath(repoPath),
+		git.WithURL(fmt.Sprintf("git@github.com:%s/%s.git", githubOrg, githubRepo)),
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create git service: %w", err)
+	}
+
+	// Get git status
+	changes, err := gitSvc.Status()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get git status: %w", err)
+	}
+
+	return changes, nil
+}
+
+func noChanges(changes *git.StatusChanges) bool {
+	return len(changes.Added) == 0 && len(changes.Modified) == 0 && len(changes.Deleted) == 0
+}
+
+func initializeGeminiClient(ctx context.Context) (*gemini.Service, error) {
+	apiKey := os.Getenv("GEMINI_API_KEY")
+	if apiKey == "" {
+		return nil, fmt.Errorf("GEMINI_API_KEY is not set")
+	}
+
+	geminiClient, err := gemini.New(ctx, gemini.WithAPIKey(apiKey))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create gemini client: %w", err)
+	}
+	return geminiClient, nil
+}
+
+func cleanupGeminiClient(client *gemini.Service) {
+	if client != nil {
+		if err := client.Close(); err != nil {
 			slog.With("error", err).Error("failed to close gemini client")
 		}
-	}(geminiClient)
-	if err != nil {
-		slog.With("error", err).Error("failed to create gemini client")
 	}
+}
+
+func generateCommitMessageWithBranch(ctx context.Context, geminiClient *gemini.Service, changes *git.StatusChanges) error {
+	// Prepare the commit message and branch name prompt
+	prompt := fmt.Sprintf(
+		`Generate the following:
+1. A commit message based on the following file changes:
+Modified:
+%s
+
+Added:
+%s
+
+Deleted:
+%s
+
+The commit message must adhere to the conventional commit standard and Semantic Versioning (SemVer) principles:
+- Use "fix" for bug fixes (patch).
+- Use "feat" for new features (minor).
+- Use "feat!:, fix!:, etc." for breaking changes (major).
+- Ensure the title is concise (max 50 characters) and the body is detailed, explaining what and why.
+
+2. A suggested branch name for these changes:
+- The branch name should use the format: [type]/[short-description].
+- Use "feat", "fix", or "refactor" as the type, depending on the changes.
+- The description should summarize the changes succinctly, using hyphens instead of spaces.
+- Ensure the branch name is concise and descriptive.
+
+Return only the formatted commit message and branch name.`,
+		strings.Join(changes.Modified, "\n"),
+		strings.Join(changes.Added, "\n"),
+		strings.Join(changes.Deleted, "\n"),
+	)
+
+	// Send the prompt to Gemini
 	resp, err := geminiClient.SendMessage(ctx, &gemini.SendMessageRequest{
 		Model: "gemini-1.5-flash",
 		Content: []*genai.Content{
 			{
 				Parts: []genai.Part{
-					genai.Text("Provide a detailed commit message with a title and description. The title should be a concise summary (max 50 characters). The description should provide more context about the changes, explaining why the changes were made and their impact. Use bullet points if multiple changes are significant. If it's just some minor changes, use 'fix' instead of 'feat'. Do not include any explanation in your response, only return a commit message content."),
-				},
-				Role: "user",
-			},
-			{
-				Parts: []genai.Part{
-					genai.Text(fmt.Sprintf("Generate a commit message in conventional commit standard format based on the following file changes:\n\n%s\n\n- Commit message title must be a concise summary (max 100 characters)\n- If it's just some minor changes, use 'fix' instead of 'feat'\n- IMPORTANT: Do not include any explanation in your response, only return a commit message content", changesStr)),
+					genai.Text(prompt),
 				},
 				Role: "user",
 			},
 		},
 	})
 	if err != nil {
-		slog.With("error", err).Error("failed to send message to generative model")
+		return fmt.Errorf("failed to send message to Gemini: %w", err)
 	}
+
+	// Process and log the response
 	for _, cand := range resp.Candidates {
 		if cand.Content != nil {
 			for _, part := range cand.Content.Parts {
-				slog.With("part", part).Info("generated commit message")
+				formattedMessage := strings.TrimSpace(fmt.Sprintf("%v", part))
+				slog.Info("\nGenerated Output:\n" + formattedMessage)
+				return nil
 			}
 		}
 	}
 
+	return fmt.Errorf("no valid response from Gemini")
 }
