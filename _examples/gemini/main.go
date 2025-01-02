@@ -8,7 +8,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/cloudnative-zoo/go-commons/gemini"
+	gemini2 "github.com/cloudnative-zoo/go-commons/genai/gemini"
+
 	"github.com/cloudnative-zoo/go-commons/git"
 	"github.com/google/generative-ai-go/genai"
 )
@@ -74,20 +75,20 @@ func noChanges(changes *git.StatusChanges) bool {
 	return len(changes.Added) == 0 && len(changes.Modified) == 0 && len(changes.Deleted) == 0
 }
 
-func initializeGeminiClient(ctx context.Context) (*gemini.Service, error) {
+func initializeGeminiClient(ctx context.Context) (*gemini2.Service, error) {
 	apiKey := os.Getenv("GEMINI_API_KEY")
 	if apiKey == "" {
 		return nil, fmt.Errorf("GEMINI_API_KEY is not set")
 	}
 
-	geminiClient, err := gemini.New(ctx, gemini.WithAPIKey(apiKey))
+	geminiClient, err := gemini2.New(ctx, gemini2.WithAPIKey(apiKey))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gemini client: %w", err)
 	}
 	return geminiClient, nil
 }
 
-func cleanupGeminiClient(client *gemini.Service) {
+func cleanupGeminiClient(client *gemini2.Service) {
 	if client != nil {
 		if err := client.Close(); err != nil {
 			slog.With("error", err).Error("failed to close gemini client")
@@ -95,7 +96,7 @@ func cleanupGeminiClient(client *gemini.Service) {
 	}
 }
 
-func generateCommitMessageWithBranch(ctx context.Context, geminiClient *gemini.Service, changes *git.StatusChanges) error {
+func generateCommitMessageWithBranch(ctx context.Context, geminiClient *gemini2.Service, changes *git.StatusChanges) error {
 	// Prepare the commit message and branch name prompt
 	prompt := fmt.Sprintf(
 		`Generate the following:
@@ -128,7 +129,7 @@ Return only the formatted commit message and branch name.`,
 	)
 
 	// Send the prompt to Gemini
-	resp, err := geminiClient.SendMessage(ctx, &gemini.SendMessageRequest{
+	resp, err := geminiClient.SendMessage(ctx, &gemini2.SendMessageRequest{
 		Model: "gemini-1.5-flash",
 		Content: []*genai.Content{
 			{
