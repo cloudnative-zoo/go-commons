@@ -8,10 +8,9 @@ import (
 	"path"
 	"strings"
 
-	gemini2 "github.com/cloudnative-zoo/go-commons/genai/gemini"
+	"github.com/cloudnative-zoo/go-commons/genai/gemini"
 
 	"github.com/cloudnative-zoo/go-commons/git"
-	"github.com/google/generative-ai-go/genai"
 )
 
 // Constants
@@ -49,7 +48,7 @@ func main() {
 
 func initializeGitService(ctx context.Context) (*git.StatusChanges, error) {
 	homeDir := os.Getenv("HOME")
-	repoPath := path.Join(homeDir, "development", githubOrg, githubRepo)
+	repoPath := path.Join(homeDir, "development", "github", githubOrg, githubRepo)
 
 	// Initialize Git service
 	gitSvc, err := git.New(
@@ -75,20 +74,20 @@ func noChanges(changes *git.StatusChanges) bool {
 	return len(changes.Added) == 0 && len(changes.Modified) == 0 && len(changes.Deleted) == 0
 }
 
-func initializeGeminiClient(ctx context.Context) (*gemini2.Service, error) {
+func initializeGeminiClient(ctx context.Context) (*gemini.Service, error) {
 	apiKey := os.Getenv("GEMINI_API_KEY")
 	if apiKey == "" {
 		return nil, fmt.Errorf("GEMINI_API_KEY is not set")
 	}
 
-	geminiClient, err := gemini2.New(ctx, gemini2.WithAPIKey(apiKey))
+	geminiClient, err := gemini.New(ctx, gemini.WithAPIKey(apiKey), gemini.WithModel("gemini-1.5-flash"))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gemini client: %w", err)
 	}
 	return geminiClient, nil
 }
 
-func cleanupGeminiClient(client *gemini2.Service) {
+func cleanupGeminiClient(client *gemini.Service) {
 	if client != nil {
 		if err := client.Close(); err != nil {
 			slog.With("error", err).Error("failed to close gemini client")
@@ -96,7 +95,7 @@ func cleanupGeminiClient(client *gemini2.Service) {
 	}
 }
 
-func generateCommitMessageWithBranch(ctx context.Context, geminiClient *gemini2.Service, changes *git.StatusChanges) error {
+func generateCommitMessageWithBranch(ctx context.Context, geminiClient *gemini.Service, changes *git.StatusChanges) error {
 	// Prepare the commit message and branch name prompt
 	prompt := fmt.Sprintf(
 		`Generate the following:
@@ -129,7 +128,7 @@ Return only the formatted commit message and branch name.`,
 	)
 
 	// Send the prompt to Gemini
-	resp, err := geminiClient.SendMessage(ctx, &gemini2.SendMessageRequest{
+	/*	resp, err := geminiClient.SendMessage(ctx, &gemini.SendMessageRequest{
 		Model: "gemini-1.5-flash",
 		Content: []*genai.Content{
 			{
@@ -139,21 +138,14 @@ Return only the formatted commit message and branch name.`,
 				Role: "user",
 			},
 		},
-	})
+	})*/
+	resp, err := geminiClient.GetCompletion(ctx, prompt)
 	if err != nil {
 		return fmt.Errorf("failed to send message to Gemini: %w", err)
 	}
 
-	// Process and log the response
-	for _, cand := range resp.Candidates {
-		if cand.Content != nil {
-			for _, part := range cand.Content.Parts {
-				formattedMessage := strings.TrimSpace(fmt.Sprintf("%v", part))
-				slog.Info("\nGenerated Output:\n" + formattedMessage)
-				return nil
-			}
-		}
-	}
+	formattedMessage := strings.TrimSpace(fmt.Sprintf("%v", resp))
+	slog.Info("\nGenerated Output:\n" + formattedMessage)
 
 	return fmt.Errorf("no valid response from Gemini")
 }
