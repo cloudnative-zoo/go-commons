@@ -114,6 +114,10 @@ The commit message must adhere to the conventional commit standard and Semantic 
 - Use "feat" for new features (minor).
 - Use "feat!:, fix!:, etc." for breaking changes (major).
 - Ensure the title is concise (max 50 characters) and the body is detailed, explaining what and why.
+- Ensure there are no placeholder values in the commit message.
+- Ensure the commit message is in the imperative mood.
+- Ensure that no "may", "might", "could", or "should" are used in the commit message.
+- Ensure that the commit message has only bullet points, if necessary.
 
 2. A suggested branch name for these changes:
 - The branch name should use the format: [type]/[short-description].
@@ -139,7 +143,7 @@ Return only the formatted commit message and branch name.`,
 			},
 		},
 	})*/
-	resp, err := geminiClient.GetCompletion(ctx, prompt)
+	resp, err := geminiClient.GenerateCompletion(ctx, prompt)
 	if err != nil {
 		return fmt.Errorf("failed to send message to Gemini: %w", err)
 	}
@@ -147,5 +151,5 @@ Return only the formatted commit message and branch name.`,
 	formattedMessage := strings.TrimSpace(fmt.Sprintf("%v", resp))
 	slog.Info("\nGenerated Output:\n" + formattedMessage)
 
-	return fmt.Errorf("no valid response from Gemini")
+	return nil
 }
