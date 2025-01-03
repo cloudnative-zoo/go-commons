@@ -21,3 +21,14 @@ func WithAPIKey(apiKey string) Options {
 		return nil
 	}
 }
+
+// WithModel configures the Gemini client with the provided model.
+func WithModel(model string) Options {
+	return func(s *Service) error {
+		if model == "" {
+			return errors.New("model cannot be empty")
+		}
+		s.model = model
+		return nil
+	}
+}

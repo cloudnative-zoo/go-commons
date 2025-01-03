@@ -8,6 +8,7 @@ import (
 
 type Service struct {
 	client *genai.Client
+	model  string
 	apiKey string
 }
 
