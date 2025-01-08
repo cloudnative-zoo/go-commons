@@ -6,41 +6,36 @@ import (
 	"fmt"
 	"sync"
 
-	gtranslate "github.com/gilang-as/google-translate"
+	gtranslate "github.com/bas24/googletranslatefree"
 )
 
 // ErrInvalidLanguage is returned when an invalid language is provided.
 var ErrInvalidLanguage = errors.New("invalid target language")
 
 // TranslateText translates the given text into the target language.
-func TranslateText(text string, toLang Language) (string, error) {
-	if !IsValidLanguage(toLang) {
-		return "", fmt.Errorf("%w: %s", ErrInvalidLanguage, toLang)
+func TranslateText(text string, from, to Language) (string, error) {
+	if !IsValidLanguage(from) || !IsValidLanguage(to) {
+		return "", fmt.Errorf("%w: %s", ErrInvalidLanguage, to)
 	}
 
-	value := gtranslate.Translate{
-		Text: text,
-		To:   string(toLang),
-	}
-
-	translated, err := gtranslate.Translator(value)
+	translated, err := gtranslate.Translate(text, string(from), string(to))
 	if err != nil {
 		return "", fmt.Errorf("error translating text: %w", err)
 	}
 
-	return translated.Text, nil
+	return translated, nil
 }
 
 // BatchTranslate translates a batch of texts into the target language.
-func BatchTranslate(texts []string, toLang Language) (map[string]string, error) {
+func BatchTranslate(texts []string, from, to Language) (map[string]string, error) {
 	translations := make(map[string]string)
 	var mu sync.Mutex
 	var wg sync.WaitGroup
 	var errs []error
 
 	// If the language is not valid, return an error.
-	if !IsValidLanguage(toLang) {
-		return nil, fmt.Errorf("%w: %s", ErrInvalidLanguage, toLang)
+	if !IsValidLanguage(from) || !IsValidLanguage(to) {
+		return translations, fmt.Errorf("%w: %s", ErrInvalidLanguage, to)
 	}
 
 	// Perform translations for valid languages.
@@ -48,7 +43,7 @@ func BatchTranslate(texts []string, toLang Language) (map[string]string, error) 
 		wg.Add(1)
 		go func(text string) {
 			defer wg.Done()
-			translated, err := TranslateText(text, toLang)
+			translated, err := TranslateText(text, from, to)
 			mu.Lock()
 			if err != nil {
 				errs = append(errs, fmt.Errorf("error translating text '%s': %w", text, err))
