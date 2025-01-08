@@ -13,7 +13,7 @@ import (
 	"github.com/cloudnative-zoo/go-commons/git"
 )
 
-// Constants
+// Constants.
 const (
 	githubOrg  = "cloudnative-zoo"
 	githubRepo = "go-commons"
