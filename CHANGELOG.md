@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.7.0...v0.8.0) (2025-01-08)
+
+
+### Features
+
+* improved translation package ([#31](https://github.com/cloudnative-zoo/go-commons/issues/31)) ([dd91887](https://github.com/cloudnative-zoo/go-commons/commit/dd918877cfc30ebb84d405d5ebbe21ac67c38a1f))
+
 ## [0.7.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.6.0...v0.7.0) (2025-01-08)
 
 
