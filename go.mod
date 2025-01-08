@@ -3,7 +3,7 @@ module github.com/cloudnative-zoo/go-commons
 go 1.23.4
 
 require (
-	github.com/gilang-as/google-translate v0.1.1
+	github.com/bas24/googletranslatefree v0.0.0-20231117033553-f5859fe54d30
 	github.com/go-git/go-git/v5 v5.13.1
 	github.com/gofri/go-github-ratelimit v1.1.0
 	github.com/google/generative-ai-go v0.19.0

@@ -11,7 +11,7 @@ func main() {
 	texts := []string{"Hello", "World"}
 	toLang := translation.Urdu
 
-	translations, err := translation.BatchTranslate(texts, toLang)
+	translations, err := translation.BatchTranslate(texts, translation.English, toLang)
 	if err != nil {
 		log.Printf("Translation errors: %v", err)
 	}
