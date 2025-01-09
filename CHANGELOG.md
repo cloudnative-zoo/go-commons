@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.8.0...v0.9.0) (2025-01-09)
+
+
+### Features
+
+* added consts for dir creation ([#33](https://github.com/cloudnative-zoo/go-commons/issues/33)) ([7c8dd0d](https://github.com/cloudnative-zoo/go-commons/commit/7c8dd0d09a2e8509cf3654293f4a19168b0967b5))
+
 ## [0.8.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.7.0...v0.8.0) (2025-01-08)
 
 
