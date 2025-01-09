@@ -11,14 +11,14 @@ require (
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	gitlab.com/gitlab-org/api/client-go v0.119.0
-	google.golang.org/api v0.215.0
+	google.golang.org/api v0.216.0
 )
 
 require (
 	cloud.google.com/go v0.118.0 // indirect
-	cloud.google.com/go/ai v0.9.0 // indirect
-	cloud.google.com/go/auth v0.13.0 // indirect
-	cloud.google.com/go/auth/oauth2adapt v0.2.6 // indirect
+	cloud.google.com/go/ai v0.10.0 // indirect
+	cloud.google.com/go/auth v0.14.0 // indirect
+	cloud.google.com/go/auth/oauth2adapt v0.2.7 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
 	cloud.google.com/go/longrunning v0.6.4 // indirect
 	dario.cat/mergo v1.0.1 // indirect
