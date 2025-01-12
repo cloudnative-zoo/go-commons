@@ -26,7 +26,12 @@ func New(ctx context.Context, opts ...Options) (*Service, error) {
 		return nil, errors.New("authentication is required: provide a token, SSH key, or SSH key path")
 	}
 	if service.url == "" {
-		return nil, errors.New("clone URL is required")
+		remoteURL, err := getRemoteURL(service.path)
+		if err != nil {
+			return nil, fmt.Errorf("repository URL is required: %w", err)
+		}
+		slog.With("path", service.path).With("url", remoteURL).Info("using remote URL")
+		service.url = remoteURL
 	}
 	if service.path == "" {
 		return nil, errors.New("repository path is required")

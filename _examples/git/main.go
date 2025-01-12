@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"os"
 	"path"
@@ -12,22 +11,28 @@ import (
 
 func main() {
 	ctx := context.Background()
-	homeDir := os.Getenv("HOME")
-	githubOrg := "cloudnative-zoo"
-	githubRepo := "go-commons"
-	repoPath := path.Join(homeDir, "development", githubOrg, githubRepo)
+	userHomeDir, err := os.UserHomeDir()
+	if err != nil {
+		slog.With("error", err).Error("failed to get user home directory")
+		os.Exit(1)
+	}
+	currentWorkingDir, err := os.Getwd()
+	if err != nil {
+		slog.With("error", err).Error("failed to get current working directory")
+		os.Exit(1)
+	}
 	gitSvc, err := git.New(
 		ctx,
-		git.WithSSHKeyPath(path.Join(homeDir, ".ssh", "github_hassnatahmad"), ""),
-		git.WithRepoPath(repoPath),
-		git.WithURL(fmt.Sprintf("git@github.com:%s/%s.git", githubOrg, githubRepo)),
+		git.WithSSHKeyPath(path.Join(userHomeDir, ".ssh", "github_hassnatahmad"), ""),
+		git.WithRepoPath(currentWorkingDir),
+		//git.WithURL(fmt.Sprintf("git@github.com:%s/%s.git", githubOrg, githubRepo)),
 	)
 	if err != nil {
 		slog.With("error", err).Error("failed to create git service")
 		return
 	}
 	// Pull the repository.
-	pull(ctx, gitSvc)
+	// pull(ctx, gitSvc)
 	// Check the status of the repository.
 	status(ctx, gitSvc)
 }
@@ -48,7 +53,7 @@ func fetch(ctx context.Context, gitSvc *git.Service) {
 	slog.Info("repository fetched successfully")
 }
 
-func status(ctx context.Context, gitSvc *git.Service) {
+func status(_ context.Context, gitSvc *git.Service) {
 	result, err := gitSvc.Status()
 	if err != nil {
 		slog.With("error", err).Error("failed to get git status")
