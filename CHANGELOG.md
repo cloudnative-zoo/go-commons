@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.9.0...v0.10.0) (2025-01-12)
+
+
+### Features
+
+* Enhance Gemini example and Git interactions ([#35](https://github.com/cloudnative-zoo/go-commons/issues/35)) ([524a4fc](https://github.com/cloudnative-zoo/go-commons/commit/524a4fc11a6510c6ee152a9d3f080195b096ea44))
+
 ## [0.9.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.8.0...v0.9.0) (2025-01-09)
 
 
