@@ -2,6 +2,7 @@ package git
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/go-git/go-git/v5"
@@ -34,4 +35,24 @@ func clone(ctx context.Context, path, url string, auth transport.AuthMethod, pro
 	}
 
 	return nil
+}
+
+func getRemoteURL(path string) (string, error) {
+	repo, err := open(path)
+	if err != nil {
+		return "", err
+	}
+
+	remote, err := repo.Remote("origin")
+	if err != nil {
+		return "", fmt.Errorf("failed to get remote 'origin': %w", err)
+	}
+
+	remoteConfig := remote.Config()
+	urls := remoteConfig.URLs
+	if len(urls) == 0 {
+		return "", errors.New("no remote URL found for 'origin'")
+	}
+
+	return urls[0], nil
 }

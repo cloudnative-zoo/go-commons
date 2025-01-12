@@ -47,7 +47,11 @@ func main() {
 }
 
 func initializeGitService(ctx context.Context) (*git.StatusChanges, error) {
-	homeDir := os.Getenv("HOME")
+	userHomeDir, err := os.UserHomeDir()
+	if err != nil {
+		slog.With("error", err).Error("failed to get user home directory")
+		os.Exit(1)
+	}
 	currentWorkingDir, err := os.Getwd()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get current working directory: %w", err)
@@ -56,9 +60,9 @@ func initializeGitService(ctx context.Context) (*git.StatusChanges, error) {
 	// Initialize Git service
 	gitSvc, err := git.New(
 		ctx,
-		git.WithSSHKeyPath(path.Join(homeDir, ".ssh", "github_hassnatahmad"), ""),
+		git.WithSSHKeyPath(path.Join(userHomeDir, ".ssh", "github_hassnatahmad"), ""),
 		git.WithRepoPath(currentWorkingDir),
-		git.WithURL(fmt.Sprintf("git@github.com:%s/%s.git", githubOrg, githubRepo)),
+		// git.WithURL(fmt.Sprintf("git@github.com:%s/%s.git", githubOrg, githubRepo)),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create git service: %w", err)
