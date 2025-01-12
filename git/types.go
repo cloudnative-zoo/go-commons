@@ -7,10 +7,11 @@ import (
 )
 
 type Service struct {
-	auth     transport.AuthMethod
-	repo     *git.Repository
-	url      string
-	path     string
-	branch   string
-	progress sideband.Progress
+	auth            transport.AuthMethod
+	repo            *git.Repository
+	url             string
+	path            string
+	branch          string
+	cloneIfNotExist bool
+	progress        sideband.Progress
 }

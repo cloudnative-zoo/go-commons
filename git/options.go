@@ -92,3 +92,11 @@ func WithProgress(progress sideband.Progress) Options {
 		return nil
 	}
 }
+
+// WithCloneIfNotExist sets whether to clone the repository if it does not exist locally.
+func WithCloneIfNotExist(cloneIfNotExist bool) Options {
+	return func(s *Service) error {
+		s.cloneIfNotExist = cloneIfNotExist
+		return nil
+	}
+}
