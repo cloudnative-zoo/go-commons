@@ -1,14 +1,14 @@
 package git
 
 import (
-	"github.com/go-git/go-git/v5"
+	gogit "github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/protocol/packp/sideband"
 	"github.com/go-git/go-git/v5/plumbing/transport"
 )
 
 type Service struct {
 	auth            transport.AuthMethod
-	repo            *git.Repository
+	repo            *gogit.Repository
 	url             string
 	path            string
 	branch          string

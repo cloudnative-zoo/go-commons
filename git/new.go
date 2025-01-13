@@ -37,6 +37,10 @@ func New(ctx context.Context, opts ...Options) (*Service, error) {
 		return nil, errors.New("repository path is required")
 	}
 
+	if err := validateCredentials(service.url, service.auth); err != nil {
+		return nil, fmt.Errorf("invalid credentials for %q: %w", service.url, err)
+	}
+
 	// Try to open the existing repository.
 	repo, err := open(service.path)
 	if err != nil {

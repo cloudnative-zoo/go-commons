@@ -1,2 +1,2 @@
-// Package git is a collection of utility functions for working with Git.
+// Package git is a collection of utility functions for working with gogit.
 package git
