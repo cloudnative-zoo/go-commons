@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.12.0...v0.13.0) (2025-01-13)
+
+
+### Features
+
+* Improve linting and git status handling ([#41](https://github.com/cloudnative-zoo/go-commons/issues/41)) ([122dfd9](https://github.com/cloudnative-zoo/go-commons/commit/122dfd90a0aa016ef03bea0fcb7d2c7ad560baa2))
+
 ## [0.12.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.11.0...v0.12.0) (2025-01-13)
 
 
