@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/go-git/go-git/v5"
+	gogit "github.com/go-git/go-git/v5"
 )
 
 // Pull updates the local repository by pulling changes from the remote repository.
@@ -18,7 +18,7 @@ func (s *Service) Pull(ctx context.Context) error {
 	}
 
 	// Configure pull opts.
-	pullOptions := &git.PullOptions{
+	pullOptions := &gogit.PullOptions{
 		RemoteName: "origin",   // Default remote name
 		Auth:       s.auth,     // Authentication credentials
 		Progress:   s.progress, // Progress reporting (e.g., os.Stdout)
@@ -27,7 +27,7 @@ func (s *Service) Pull(ctx context.Context) error {
 	// Perform the pull operation with context.
 	err = worktree.PullContext(ctx, pullOptions)
 	switch {
-	case errors.Is(err, git.NoErrAlreadyUpToDate):
+	case errors.Is(err, gogit.NoErrAlreadyUpToDate):
 		// No changes to pull; silently return.
 		return nil
 	case err != nil:

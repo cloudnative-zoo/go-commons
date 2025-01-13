@@ -3,7 +3,7 @@ package git
 import (
 	"fmt"
 
-	"github.com/go-git/go-git/v5"
+	gogit "github.com/go-git/go-git/v5"
 )
 
 type StatusChanges struct {
@@ -35,11 +35,11 @@ func (s *Service) Status() (*StatusChanges, error) {
 	result := &StatusChanges{}
 	for file, flags := range status {
 		switch {
-		case flags.Staging == git.Unmodified: // Unmodified
+		case flags.Staging == gogit.Unmodified: // Unmodified
 			result.Modified = append(result.Modified, file)
-		case flags.Staging == git.Added: // Added
+		case flags.Staging == gogit.Added: // Added
 			result.Added = append(result.Added, file)
-		case flags.Staging == git.Deleted: // Deleted
+		case flags.Staging == gogit.Deleted: // Deleted
 			result.Deleted = append(result.Deleted, file)
 		default:
 			return nil, fmt.Errorf("unknown status flag for file %s: %v", file, flags)

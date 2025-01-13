@@ -35,6 +35,8 @@ func main() {
 	// pull(ctx, gitSvc)
 	// Check the status of the repository.
 	status(ctx, gitSvc)
+	// List branches.
+	listBranches(ctx, gitSvc)
 }
 
 func pull(ctx context.Context, gitSvc *git.Service) {
@@ -63,4 +65,16 @@ func status(_ context.Context, gitSvc *git.Service) {
 		return
 	}
 	slog.With("Added", result.Added).With("Modified", result.Modified).With("Deleted", result.Deleted).Info("git status")
+}
+
+func listBranches(_ context.Context, gitSvc *git.Service) {
+	localBranches, err := gitSvc.ListLocalBranches()
+	if err != nil {
+		slog.With("error", err).Error("failed to list local branches")
+	}
+	remoteBranches, err := gitSvc.ListRemoteBranches()
+	if err != nil {
+		slog.With("error", err).Error("failed to list remote branches")
+	}
+	slog.With("LocalBranches", localBranches).With("RemoteBranches", remoteBranches).Info("branches")
 }
