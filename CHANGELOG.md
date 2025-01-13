@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.11.0...v0.12.0) (2025-01-13)
+
+
+### Features
+
+* Enhance Git functionalities ([#39](https://github.com/cloudnative-zoo/go-commons/issues/39)) ([bb32ccf](https://github.com/cloudnative-zoo/go-commons/commit/bb32ccf6d94704566d1846fa02fce92c98619364))
+
 ## [0.11.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.10.0...v0.11.0) (2025-01-12)
 
 
