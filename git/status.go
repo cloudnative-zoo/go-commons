@@ -35,7 +35,7 @@ func (s *Service) Status() (*StatusChanges, error) {
 	result := &StatusChanges{}
 	for file, flags := range status {
 		switch {
-		case flags.Staging == gogit.Unmodified: // Unmodified
+		case flags.Staging == gogit.Unmodified || flags.Worktree == gogit.Modified || flags.Worktree == gogit.Renamed: // Unmodified, Modified, Renamed
 			result.Modified = append(result.Modified, file)
 		case flags.Staging == gogit.Added: // Added
 			result.Added = append(result.Added, file)

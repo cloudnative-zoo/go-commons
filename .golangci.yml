@@ -2,6 +2,8 @@ run:
   build-tags:
     - integration
   timeout: 10m
+  concurrency: 4
+  issues-exit-code: 1
 linters:
   disable-all: true
   enable:
@@ -40,6 +42,11 @@ linters:
     - typecheck
     - unused
 linters-settings:
+  errcheck:
+    # report about not checking of errors in type assertions: `a := b.(MyStruct)`;
+    check-type-assertions: false
+  gocyclo:
+    min-complexity: 18
   lll:
     line-length: 300
   gocritic:
