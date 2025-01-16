@@ -8,6 +8,7 @@ require (
 	github.com/gofri/go-github-ratelimit v1.1.0
 	github.com/google/generative-ai-go v0.19.0
 	github.com/google/go-github/v68 v68.0.0
+	github.com/sashabaranov/go-openai v1.36.1
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	gitlab.com/gitlab-org/api/client-go v0.119.0
