@@ -1,4 +1,4 @@
-package gemini
+package genai
 
 import (
 	"errors"
@@ -12,9 +12,9 @@ type Options func(*Service) error
 func WithAPIKey(apiKey string) Options {
 	return func(s *Service) error {
 		if apiKey == "" {
-			apiKey = os.Getenv("GEMINI_API_KEY")
+			apiKey = os.Getenv("GENAI_API_KEY")
 			if apiKey == "" {
-				return errors.New("apiKey cannot be empty. Set GEMINI_API_KEY environment variable or provide a value")
+				return errors.New("apiKey cannot be empty. Set GENAI_API_KEY environment variable or provide a value")
 			}
 		}
 		s.apiKey = apiKey // pragma: allowlist secret
@@ -29,6 +29,17 @@ func WithModel(model string) Options {
 			return errors.New("model cannot be empty")
 		}
 		s.model = model
+		return nil
+	}
+}
+
+// WithBaseURL configures the Gemini client with the provided baseURL.
+func WithBaseURL(baseURL string) Options {
+	return func(s *Service) error {
+		if baseURL == "" {
+			return errors.New("baseURL cannot be empty")
+		}
+		s.baseURL = baseURL
 		return nil
 	}
 }

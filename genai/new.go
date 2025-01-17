@@ -1,13 +1,11 @@
-// Package gemini provides a client for using the Gemini API.
-package gemini
+// Package genai provides a client for using the Provide API parameters.
+package genai
 
 import (
 	"context"
 	"fmt"
-	"log"
 
-	"github.com/google/generative-ai-go/genai"
-	"google.golang.org/api/option"
+	"github.com/sashabaranov/go-openai"
 )
 
 func New(ctx context.Context, opts ...Options) (*Service, error) {
@@ -19,11 +17,10 @@ func New(ctx context.Context, opts ...Options) (*Service, error) {
 			return nil, fmt.Errorf("failed to apply option: %w", err)
 		}
 	}
+	config := openai.DefaultConfig(s.apiKey)
+	config.BaseURL = s.baseURL
 
-	client, err := genai.NewClient(ctx, option.WithAPIKey(s.apiKey))
-	if err != nil {
-		log.Fatal(err)
-	}
+	client := openai.NewClientWithConfig(config)
 	s.client = client
 
 	return s, nil
