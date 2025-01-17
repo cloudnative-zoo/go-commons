@@ -21,7 +21,7 @@ func (s *Service) GenerateCompletion(ctx context.Context, text string) (string, 
 		},
 	)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to generate completion: %w", err)
 	}
 	return resp.Choices[0].Message.Content, err
 }
