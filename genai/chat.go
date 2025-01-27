@@ -2,6 +2,7 @@ package genai
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/sashabaranov/go-openai"
 )
