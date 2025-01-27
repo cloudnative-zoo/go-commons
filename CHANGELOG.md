@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.1](https://github.com/cloudnative-zoo/go-commons/compare/v0.13.0...v0.13.1) (2025-01-27)
+
+
+### Bug Fixes
+
+* bump libs ([#46](https://github.com/cloudnative-zoo/go-commons/issues/46)) ([e4b7492](https://github.com/cloudnative-zoo/go-commons/commit/e4b749234f77bd61f62b96c36d098066f8af7ceb))
+
 ## [0.13.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.12.0...v0.13.0) (2025-01-13)
 
 
