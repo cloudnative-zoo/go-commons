@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.13.1...v0.14.0) (2025-01-28)
+
+
+### Features
+
+* implement AI-based commit message generation and improve git service setup ([#48](https://github.com/cloudnative-zoo/go-commons/issues/48)) ([b1a76ef](https://github.com/cloudnative-zoo/go-commons/commit/b1a76ef11827154db9fa4d03a5b05f427f665ce4))
+
 ## [0.13.1](https://github.com/cloudnative-zoo/go-commons/compare/v0.13.0...v0.13.1) (2025-01-27)
 
 
