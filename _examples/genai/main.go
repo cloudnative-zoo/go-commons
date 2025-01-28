@@ -9,139 +9,178 @@ import (
 	"strings"
 
 	"github.com/cloudnative-zoo/go-commons/genai"
-
 	"github.com/cloudnative-zoo/go-commons/git"
 )
 
+type AIProvider string
+
+const (
+	ProviderGemini   AIProvider = "gemini"
+	ProviderDeepSeek AIProvider = "deepseek"
+)
+
+type ProviderConfig struct {
+	APIKeyEnvVar string
+	DefaultModel string
+	BaseAPIURL   string
+}
+
+var providerConfigs = map[AIProvider]ProviderConfig{
+	ProviderGemini: {
+		APIKeyEnvVar: "GEMINI_API_KEY",
+		DefaultModel: "gemini-2.0-flash-exp",
+		BaseAPIURL:   "https://generativelanguage.googleapis.com/v1beta/openai/",
+	},
+	ProviderDeepSeek: {
+		APIKeyEnvVar: "DEEPSEEK_API_KEY",
+		DefaultModel: "deepseek-chat",
+		BaseAPIURL:   "https://api.deepseek.com/v1",
+	},
+}
+
+type CommitGenerator struct {
+	aiClient *genai.Service
+}
+
 func main() {
 	ctx := context.Background()
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	// Initialize services
-	changes, err := initializeGitService(ctx)
+	gitSvc, err := setupGitService(ctx)
 	if err != nil {
-		slog.With("error", err).Error("failed to initialize git service")
+		logger.Error("Git service initialization failed", "error", err)
+		os.Exit(1)
+	}
+
+	changes, err := gitSvc.Status()
+	if err != nil {
+		logger.Error("Failed to get repository status", "error", err)
+		os.Exit(1)
+	}
+
+	if !hasChanges(changes) {
+		logger.Info("No changes detected in repository")
 		return
 	}
 
-	if changes == nil || noChanges(changes) {
-		slog.Info("repository is clean")
-		return
+	generator, err := NewCommitGenerator(ctx, ProviderGemini)
+	if err != nil {
+		logger.Error("Failed to initialize commit generator", "error", err)
+		os.Exit(1)
 	}
 
-	genaiClient, err := initializeGenaiClient(ctx)
-	if err != nil {
-		slog.With("error", err).Error("failed to initialize gemini client")
-		return
-	}
-	// Generate and process commit message
-	if err := generateCommitMessageWithBranch(ctx, genaiClient, changes); err != nil {
-		slog.With("error", err).Error("failed to generate commit message")
+	if err := generator.GenerateAndDisplayCommit(ctx, changes); err != nil {
+		logger.Error("Commit generation failed", "error", err)
+		os.Exit(1)
 	}
 }
 
-func initializeGitService(ctx context.Context) (*git.StatusChanges, error) {
-	userHomeDir, err := os.UserHomeDir()
-	if err != nil {
-		slog.With("error", err).Error("failed to get user home directory")
-		os.Exit(1)
-	}
-	currentWorkingDir, err := os.Getwd()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get current working directory: %w", err)
+func NewCommitGenerator(ctx context.Context, provider AIProvider) (*CommitGenerator, error) {
+	config, ok := providerConfigs[provider]
+	if !ok {
+		return nil, fmt.Errorf("unsupported provider: %s. Supported providers: %v",
+			provider, getSupportedProviders())
 	}
 
-	// Initialize Git service
-	gitSvc, err := git.New(
+	apiKey := os.Getenv(config.APIKeyEnvVar)
+	if apiKey == "" {
+		return nil, fmt.Errorf("missing required environment variable: %s", config.APIKeyEnvVar)
+	}
+
+	aiClient, err := genai.New(
 		ctx,
-		git.WithSSHKeyPath(path.Join(userHomeDir, ".ssh", "github_hassnatahmad"), ""),
-		git.WithRepoPath(currentWorkingDir),
-		// git.WithURL(fmt.Sprintf("git@github.com:%s/%s.git", githubOrg, githubRepo)),
+		genai.WithAPIKey(apiKey),
+		genai.WithModel(config.DefaultModel),
+		genai.WithBaseURL(config.BaseAPIURL),
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create AI client: %w", err)
+	}
+
+	return &CommitGenerator{
+		aiClient: aiClient,
+	}, nil
+}
+
+func (cg *CommitGenerator) GenerateAndDisplayCommit(ctx context.Context, changes *git.StatusChanges) error {
+	prompt := buildCommitPrompt(changes)
+	response, err := cg.aiClient.GenerateCompletion(ctx, prompt)
+	if err != nil {
+		return fmt.Errorf("AI request failed: %w", err)
+	}
+
+	fmt.Printf("\nGenerated Commit:\n%s\n", formatResponse(response))
+	return nil
+}
+
+func buildCommitPrompt(changes *git.StatusChanges) string {
+	const promptTemplate = `Generate a Conventional Commits message and branch name:
+
+Changes:
+- Modified: %s
+- Added:    %s
+- Removed:  %s
+
+Format:
+"""
+<type>[!]: <subject>
+
+<body>
+
+---
+branch: <type>/<short-description>
+"""
+
+Requirements:
+- Types: fix, feat, chore
+- Subject: <=50 chars, imperative mood
+- Body: Bullet points explaining changes
+- Breaking changes: Append '!' and BREAKING CHANGE note
+- Branch: 2-4 hyphenated words`
+
+	return fmt.Sprintf(promptTemplate,
+		strings.Join(changes.Modified, ", "),
+		strings.Join(changes.Added, ", "),
+		strings.Join(changes.Deleted, ", "),
+	)
+}
+
+func setupGitService(ctx context.Context) (*git.Service, error) {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get home directory: %w", err)
+	}
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get current directory: %w", err)
+	}
+
+	svc, err := git.New(
+		ctx,
+		git.WithSSHKeyPath(path.Join(homeDir, ".ssh", "github_hassnatahmad"), ""),
+		git.WithRepoPath(cwd),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create git service: %w", err)
 	}
-
-	// Get git status
-	changes, err := gitSvc.Status()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get git status: %w", err)
-	}
-
-	return changes, nil
+	return svc, nil
 }
 
-func noChanges(changes *git.StatusChanges) bool {
-	return len(changes.Added) == 0 && len(changes.Modified) == 0 && len(changes.Deleted) == 0
+func hasChanges(changes *git.StatusChanges) bool {
+	return len(changes.Added)+len(changes.Modified)+len(changes.Deleted) > 0
 }
 
-func initializeGenaiClient(ctx context.Context) (*genai.Service, error) {
-	apiKey := os.Getenv("GEMINI_API_KEY")
-	if apiKey == "" {
-		return nil, fmt.Errorf("GEMINI_API_KEY is not set")
-	}
-
-	openAIClient, err := genai.New(ctx, genai.WithAPIKey(apiKey), genai.WithModel("gemini-1.5-flash"), genai.WithBaseURL("https://generativelanguage.googleapis.com/v1beta/openai/"))
-	if err != nil {
-		return nil, fmt.Errorf("failed to create gemini client: %w", err)
-	}
-	return openAIClient, nil
+func formatResponse(response interface{}) string {
+	str := fmt.Sprintf("%v", response)
+	return strings.TrimSpace(str)
 }
 
-func generateCommitMessageWithBranch(ctx context.Context, genaiClient *genai.Service, changes *git.StatusChanges) error {
-	// Prepare the commit message and branch name prompt
-	prompt := fmt.Sprintf(
-		`Generate the following:
-1. A commit message based on the following file changes:
-Modified:
-%s
-
-Added:
-%s
-
-Deleted:
-%s
-
-The commit message must adhere to the conventional commit standard and Semantic Versioning (SemVer) principles:
-- Use "fix" for bug fixes (patch).
-- Use "feat" for new features (minor).
-- Use "feat!:, fix!:, etc." for breaking changes (major).
-- Ensure the title is concise (max 50 characters) and the body is detailed, explaining what and why.
-- Ensure there are no placeholder values in the commit message.
-- Ensure the commit message is in the imperative mood.
-- Ensure that no "may", "might", "could", or "should" are used in the commit message.
-- Ensure that the commit message has only bullet points, if necessary.
-
-2. A suggested branch name for these changes:
-- The branch name should use the format: [type]/[short-description].
-- Use "feat", "fix", or "refactor" as the type, depending on the changes.
-- The description should summarize the changes succinctly, using hyphens instead of spaces.
-- Ensure the branch name is concise and descriptive.
-
-Return only the formatted commit message and branch name.`,
-		strings.Join(changes.Modified, "\n"),
-		strings.Join(changes.Added, "\n"),
-		strings.Join(changes.Deleted, "\n"),
-	)
-
-	// Send the prompt to Gemini
-	/*	resp, err := genaiClient.SendMessage(ctx, &genai.SendMessageRequest{
-		Model: "gemini-1.5-flash",
-		Content: []*genai.Content{
-			{
-				Parts: []genai.Part{
-					genai.Text(prompt),
-				},
-				Role: "user",
-			},
-		},
-	})*/
-	resp, err := genaiClient.GenerateCompletion(ctx, prompt)
-	if err != nil {
-		return fmt.Errorf("failed to send message to Gemini: %w", err)
+func getSupportedProviders() []string {
+	providers := make([]string, 0, len(providerConfigs))
+	for p := range providerConfigs {
+		providers = append(providers, string(p))
 	}
-
-	formattedMessage := strings.TrimSpace(fmt.Sprintf("%v", resp))
-	slog.Info("\nGenerated Output:\n" + formattedMessage)
-
-	return nil
+	return providers
 }
