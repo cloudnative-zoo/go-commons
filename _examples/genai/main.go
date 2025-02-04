@@ -15,14 +15,16 @@ import (
 type AIProvider string
 
 const (
-	ProviderGemini   AIProvider = "gemini"
-	ProviderDeepSeek AIProvider = "deepseek"
+	ProviderGemini      AIProvider = "gemini"
+	ProviderDeepSeek    AIProvider = "deepseek"
+	ProviderAzureOpenAI AIProvider = "azure-openai"
 )
 
 type ProviderConfig struct {
-	APIKeyEnvVar string
-	DefaultModel string
-	BaseAPIURL   string
+	APIKeyEnvVar    string
+	DefaultModel    string
+	BaseAPIURL      string
+	AzureAPIVersion string
 }
 
 var providerConfigs = map[AIProvider]ProviderConfig{
@@ -35,6 +37,12 @@ var providerConfigs = map[AIProvider]ProviderConfig{
 		APIKeyEnvVar: "DEEPSEEK_API_KEY",
 		DefaultModel: "deepseek-chat",
 		BaseAPIURL:   "https://api.deepseek.com/v1",
+	},
+	ProviderAzureOpenAI: {
+		APIKeyEnvVar:    "AZURE_OPENAI_API_KEY",
+		DefaultModel:    "o3-mini",
+		BaseAPIURL:      "https://swedencentral.api.cognitive.microsoft.com/",
+		AzureAPIVersion: "2024-12-01-preview",
 	},
 }
 
@@ -64,7 +72,7 @@ func main() {
 		return
 	}
 
-	generator, err := NewCommitGenerator(ctx, ProviderGemini)
+	generator, err := NewCommitGenerator(ctx, ProviderAzureOpenAI)
 	if err != nil {
 		logger.Error("Failed to initialize commit generator", "error", err)
 		os.Exit(1)
@@ -90,9 +98,11 @@ func NewCommitGenerator(ctx context.Context, provider AIProvider) (*CommitGenera
 
 	aiClient, err := genai.New(
 		ctx,
+		true,
 		genai.WithAPIKey(apiKey),
 		genai.WithModel(config.DefaultModel),
 		genai.WithBaseURL(config.BaseAPIURL),
+		genai.WithAPIVersion(config.AzureAPIVersion),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create AI client: %w", err)

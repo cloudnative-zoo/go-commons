@@ -8,7 +8,7 @@ import (
 // Options defines a function signature for configuring a GitHub Service instance.
 type Options func(*Service) error
 
-// WithAPIKey configures the Gemini client with the provided apiKey.
+// WithAPIKey configures the OpenAI client with the provided apiKey.
 func WithAPIKey(apiKey string) Options {
 	return func(s *Service) error {
 		if apiKey == "" {
@@ -22,7 +22,7 @@ func WithAPIKey(apiKey string) Options {
 	}
 }
 
-// WithModel configures the Gemini client with the provided model.
+// WithModel configures the OpenAI client with the provided model.
 func WithModel(model string) Options {
 	return func(s *Service) error {
 		if model == "" {
@@ -33,13 +33,24 @@ func WithModel(model string) Options {
 	}
 }
 
-// WithBaseURL configures the Gemini client with the provided baseURL.
+// WithBaseURL configures the OpenAI client with the provided baseURL.
 func WithBaseURL(baseURL string) Options {
 	return func(s *Service) error {
 		if baseURL == "" {
 			return errors.New("baseURL cannot be empty")
 		}
 		s.baseURL = baseURL
+		return nil
+	}
+}
+
+// WithAPIVersion configures the Azure client with the provided apiVersion.
+func WithAPIVersion(apiVersion string) Options {
+	return func(s *Service) error {
+		if apiVersion == "" {
+			return errors.New("apiVersion cannot be empty")
+		}
+		s.apiVersion = apiVersion
 		return nil
 	}
 }
