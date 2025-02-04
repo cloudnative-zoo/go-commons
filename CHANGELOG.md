@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.1](https://github.com/cloudnative-zoo/go-commons/compare/v0.14.0...v0.14.1) (2025-02-04)
+
+
+### Bug Fixes
+
+* added missing envs ([#52](https://github.com/cloudnative-zoo/go-commons/issues/52)) ([ab62711](https://github.com/cloudnative-zoo/go-commons/commit/ab6271136d5e94fa103e748d62560f5f97483a18))
+
 ## [0.14.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.13.1...v0.14.0) (2025-01-28)
 
 
