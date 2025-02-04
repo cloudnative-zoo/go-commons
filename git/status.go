@@ -35,11 +35,11 @@ func (s *Service) Status() (*StatusChanges, error) {
 	result := &StatusChanges{}
 	for file, flags := range status {
 		switch {
-		case flags.Staging == gogit.Unmodified || flags.Worktree == gogit.Modified || flags.Worktree == gogit.Renamed: // Unmodified, Modified, Renamed
+		case flags.Worktree == gogit.Unmodified || flags.Worktree == gogit.Modified || flags.Worktree == gogit.Renamed || flags.Staging == gogit.Unmodified || flags.Staging == gogit.Modified || flags.Staging == gogit.Renamed || flags.Staging == gogit.UpdatedButUnmerged || flags.Worktree == gogit.UpdatedButUnmerged:
 			result.Modified = append(result.Modified, file)
-		case flags.Staging == gogit.Added: // Added
+		case flags.Staging == gogit.Added || flags.Worktree == gogit.Added || flags.Worktree == gogit.Copied || flags.Staging == gogit.Copied:
 			result.Added = append(result.Added, file)
-		case flags.Staging == gogit.Deleted: // Deleted
+		case flags.Staging == gogit.Deleted || flags.Worktree == gogit.Deleted:
 			result.Deleted = append(result.Deleted, file)
 		default:
 			return nil, fmt.Errorf("unknown status flag for file %s: %v", file, flags)
