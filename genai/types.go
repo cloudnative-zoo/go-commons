@@ -5,8 +5,9 @@ import (
 )
 
 type Service struct {
-	client  *openai.Client
-	model   string
-	apiKey  string
-	baseURL string
+	client     *openai.Client
+	model      string
+	apiKey     string
+	baseURL    string
+	apiVersion string
 }

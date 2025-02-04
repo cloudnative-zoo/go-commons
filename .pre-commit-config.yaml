@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.23.2
+    rev: v8.23.3
     hooks:
       - id: gitleaks
   - repo: https://github.com/Yelp/detect-secrets
@@ -17,7 +17,7 @@ repos:
         args: [--autofix]
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.0
+    rev: v2.4.1
     hooks:
       - id: codespell
         name: Run codespell
