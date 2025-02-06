@@ -1,8 +1,8 @@
 package github
 
 import (
-	"log/slog"
-	"os"
+	"errors"
+	"fmt"
 
 	"github.com/cloudnative-zoo/go-commons/util"
 	"github.com/gofri/go-github-ratelimit/github_ratelimit"
@@ -20,16 +20,14 @@ func WithToken(token string) Options {
 			// Fetch token from environment variables if not provided.
 			token = util.GetEnv("GH_TOKEN", "GITHUB_TOKEN", "GITHUB_API_TOKEN", "GITHUB_OAUTH_TOKEN")
 			if token == "" {
-				slog.Error("A valid token must be provided directly or via environment variables (GH_TOKEN, GITHUB_TOKEN, GITHUB_API_TOKEN, GITHUB_OAUTH_TOKEN).")
-				os.Exit(1)
+				return errors.New("GitHub token is required: provide a token or set the GH_TOKEN, GITHUB_TOKEN, GITHUB_API_TOKEN, or GITHUB_OAUTH_TOKEN environment variable")
 			}
 		}
 
 		// Create a rate limiter-enabled GitHub client.
 		rateLimiter, err := github_ratelimit.NewRateLimitWaiterClient(nil)
 		if err != nil {
-			slog.With("error", err).Error("Failed to create GitHub rate limiter client")
-			os.Exit(1)
+			return fmt.Errorf("failed to create rate limiter: %w", err)
 		}
 
 		// Initialize the GitHub client with the provided token.

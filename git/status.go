@@ -28,14 +28,14 @@ func (s *Service) Status() (*StatusChanges, error) {
 
 	if status.IsClean() {
 		// No changes to commit; silently return.
-		return nil, nil
+		return &StatusChanges{}, nil
 	}
 
 	// Parse the status result.
 	result := &StatusChanges{}
 	for file, flags := range status {
 		switch {
-		case flags.Worktree == gogit.Unmodified || flags.Worktree == gogit.Modified || flags.Worktree == gogit.Renamed || flags.Staging == gogit.Unmodified || flags.Staging == gogit.Modified || flags.Staging == gogit.Renamed || flags.Staging == gogit.UpdatedButUnmerged || flags.Worktree == gogit.UpdatedButUnmerged:
+		case flags.Worktree == gogit.Modified || flags.Staging == gogit.Modified || flags.Worktree == gogit.Renamed || flags.Staging == gogit.Renamed || flags.Staging == gogit.UpdatedButUnmerged || flags.Worktree == gogit.UpdatedButUnmerged:
 			result.Modified = append(result.Modified, file)
 		case flags.Staging == gogit.Added || flags.Worktree == gogit.Added || flags.Worktree == gogit.Copied || flags.Staging == gogit.Copied:
 			result.Added = append(result.Added, file)

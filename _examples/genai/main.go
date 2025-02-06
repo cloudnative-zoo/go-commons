@@ -8,6 +8,8 @@ import (
 	"path"
 	"strings"
 
+	"github.com/sashabaranov/go-openai"
+
 	"github.com/cloudnative-zoo/go-commons/genai"
 	"github.com/cloudnative-zoo/go-commons/git"
 )
@@ -15,34 +17,34 @@ import (
 type AIProvider string
 
 const (
-	ProviderGemini      AIProvider = "gemini"
-	ProviderDeepSeek    AIProvider = "deepseek"
-	ProviderAzureOpenAI AIProvider = "azure-openai"
+	Gemini      AIProvider = "gemini"
+	DeepSeek    AIProvider = "deepseek"
+	AzureOpenAI AIProvider = "azure-openai"
 )
 
 type ProviderConfig struct {
-	APIKeyEnvVar    string
-	DefaultModel    string
-	BaseAPIURL      string
-	AzureAPIVersion string
+	APIKeyEnvVar string
+	DefaultModel string
+	BaseAPIURL   string
+	APIVersion   string
 }
 
 var providerConfigs = map[AIProvider]ProviderConfig{
-	ProviderGemini: {
+	Gemini: {
 		APIKeyEnvVar: "GEMINI_API_KEY",
-		DefaultModel: "gemini-2.0-flash-exp",
+		DefaultModel: "gemini-2.0-flash-lite-preview-02-05",
 		BaseAPIURL:   "https://generativelanguage.googleapis.com/v1beta/openai/",
 	},
-	ProviderDeepSeek: {
+	DeepSeek: {
 		APIKeyEnvVar: "DEEPSEEK_API_KEY",
 		DefaultModel: "deepseek-chat",
 		BaseAPIURL:   "https://api.deepseek.com/v1",
 	},
-	ProviderAzureOpenAI: {
-		APIKeyEnvVar:    "AZURE_OPENAI_API_KEY",
-		DefaultModel:    "o3-mini",
-		BaseAPIURL:      "https://swedencentral.api.cognitive.microsoft.com/",
-		AzureAPIVersion: "2024-12-01-preview",
+	AzureOpenAI: {
+		APIKeyEnvVar: "AZURE_OPENAI_API_KEY",
+		DefaultModel: "o3-mini",
+		BaseAPIURL:   "https://swedencentral.api.cognitive.microsoft.com/",
+		APIVersion:   "2024-12-01-preview",
 	},
 }
 
@@ -72,7 +74,7 @@ func main() {
 		return
 	}
 
-	generator, err := NewCommitGenerator(ctx, ProviderAzureOpenAI)
+	generator, err := NewCommitGenerator(ctx, AzureOpenAI)
 	if err != nil {
 		logger.Error("Failed to initialize commit generator", "error", err)
 		os.Exit(1)
@@ -95,14 +97,19 @@ func NewCommitGenerator(ctx context.Context, provider AIProvider) (*CommitGenera
 	if apiKey == "" {
 		return nil, fmt.Errorf("missing required environment variable: %s", config.APIKeyEnvVar)
 	}
-
+	var isAzureOpenAI bool
+	if provider == AzureOpenAI {
+		isAzureOpenAI = true
+	} else {
+		isAzureOpenAI = false
+	}
 	aiClient, err := genai.New(
 		ctx,
-		true,
+		isAzureOpenAI,
 		genai.WithAPIKey(apiKey),
 		genai.WithModel(config.DefaultModel),
 		genai.WithBaseURL(config.BaseAPIURL),
-		genai.WithAPIVersion(config.AzureAPIVersion),
+		genai.WithAPIVersion(config.APIVersion),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create AI client: %w", err)
@@ -115,7 +122,13 @@ func NewCommitGenerator(ctx context.Context, provider AIProvider) (*CommitGenera
 
 func (cg *CommitGenerator) GenerateAndDisplayCommit(ctx context.Context, changes *git.StatusChanges) error {
 	prompt := buildCommitPrompt(changes)
-	response, err := cg.aiClient.GenerateCompletion(ctx, prompt)
+	messages := []openai.ChatCompletionMessage{
+		{
+			Role:    openai.ChatMessageRoleUser,
+			Content: prompt,
+		},
+	}
+	response, err := cg.aiClient.GenerateCompletion(ctx, messages)
 	if err != nil {
 		return fmt.Errorf("AI request failed: %w", err)
 	}

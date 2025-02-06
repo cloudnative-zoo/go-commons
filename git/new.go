@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log/slog"
 )
 
 // New initializes a new Git service instance with the provided options.
@@ -30,7 +29,6 @@ func New(ctx context.Context, opts ...Options) (*Service, error) {
 		if err != nil {
 			return nil, fmt.Errorf("repository URL is required: %w", err)
 		}
-		slog.With("path", service.path).With("url", remoteURL).Info("using remote URL")
 		service.url = remoteURL
 	}
 	if service.path == "" {
@@ -49,7 +47,6 @@ func New(ctx context.Context, opts ...Options) (*Service, error) {
 			return nil, fmt.Errorf("repository not found at path %s: %w", service.path, err)
 		}
 
-		slog.With("path", service.path).Error("repository not found; attempting to clone")
 		if cloneErr := clone(ctx, service.path, service.url, service.auth, service.progress); cloneErr != nil {
 			return nil, fmt.Errorf("failed to clone repository from URL %s to path %s: %w", service.url, service.path, cloneErr)
 		}

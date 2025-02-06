@@ -1,9 +1,8 @@
 package gitlab
 
 import (
+	"errors"
 	"fmt"
-	"log/slog"
-	"os"
 
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 
@@ -21,8 +20,7 @@ func WithToken(token string) Options {
 			// Fetch token from environment variables if not provided.
 			token = util.GetEnv("GITLAB_TOKEN", "GITLAB_API_TOKEN")
 			if token == "" {
-				slog.Error("A valid token must be provided directly or via environment variables (GITLAB_TOKEN, GITLAB_API_TOKEN).")
-				os.Exit(1)
+				return errors.New("a valid token must be provided directly or via environment variables (GITLAB_TOKEN, GITLAB_API_TOKEN)")
 			}
 		}
 

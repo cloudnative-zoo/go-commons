@@ -3,6 +3,7 @@ package genai
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/sashabaranov/go-openai"
@@ -25,6 +26,11 @@ func New(ctx context.Context, isAzure bool, opts ...Options) (*Service, error) {
 	if isAzure {
 		// Initialize the Azure client.
 		config = openai.DefaultAzureConfig(s.apiKey, s.baseURL)
+
+		// Check if the API version is set. If not, return an error.
+		if s.apiVersion == "" {
+			return nil, errors.New("apiVersion cannot be empty for Azure API")
+		}
 		config.APIVersion = s.apiVersion
 
 		// If you use a deployment name different from the model name, you can customize the AzureModelMapperFunc function
