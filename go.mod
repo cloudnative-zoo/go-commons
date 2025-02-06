@@ -1,6 +1,6 @@
 module github.com/cloudnative-zoo/go-commons
 
-go 1.23.4
+go 1.23.6
 
 require (
 	github.com/bas24/googletranslatefree v0.0.0-20231117033553-f5859fe54d30
