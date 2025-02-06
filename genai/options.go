@@ -47,9 +47,6 @@ func WithBaseURL(baseURL string) Options {
 // WithAPIVersion configures the Azure client with the provided apiVersion.
 func WithAPIVersion(apiVersion string) Options {
 	return func(s *Service) error {
-		if apiVersion == "" {
-			return errors.New("apiVersion cannot be empty")
-		}
 		s.apiVersion = apiVersion
 		return nil
 	}

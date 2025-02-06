@@ -8,17 +8,12 @@ import (
 )
 
 // GenerateCompletion sends a message to the generative model.
-func (s *Service) GenerateCompletion(ctx context.Context, text string) (string, error) {
+func (s *Service) GenerateCompletion(ctx context.Context, messages []openai.ChatCompletionMessage) (string, error) {
 	resp, err := s.client.CreateChatCompletion(
 		ctx,
 		openai.ChatCompletionRequest{
-			Model: s.model,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: text,
-				},
-			},
+			Model:    s.model,
+			Messages: messages,
 		},
 	)
 	if err != nil {
