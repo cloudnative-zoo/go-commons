@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/cloudnative-zoo/go-commons/compare/v1.1.0...v1.1.1) (2025-02-06)
+
+
+### Bug Fixes
+
+* update Go version to 1.23.6 ([#61](https://github.com/cloudnative-zoo/go-commons/issues/61)) ([bfa02c9](https://github.com/cloudnative-zoo/go-commons/commit/bfa02c9a4a014c826cfaf73e5643188bf61592c3))
+
 ## [1.1.0](https://github.com/cloudnative-zoo/go-commons/compare/v1.0.0...v1.1.0) (2025-02-06)
 
 
