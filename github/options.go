@@ -6,7 +6,7 @@ import (
 
 	"github.com/cloudnative-zoo/go-commons/util"
 	"github.com/gofri/go-github-ratelimit/github_ratelimit"
-	"github.com/google/go-github/v68/github"
+	"github.com/google/go-github/v69/github"
 )
 
 // Options defines a function signature for configuring a GitHub Service instance.

@@ -8,7 +8,7 @@ tasks:
     cmds:
       - echo "Starting pre-commit checks..."
       - pre-commit autoupdate || (echo "Failed to autoupdate pre-commit"; exit 1)
-      - pre-commit install || (echo "Failed to install pre-commit"; exit 1)
+      #      - pre-commit install || (echo "Failed to install pre-commit"; exit 1)
       - pre-commit run --all-files || (echo "Pre-commit checks failed"; exit 1)
       - echo "Pre-commit checks completed successfully"
 
