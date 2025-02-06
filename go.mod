@@ -10,7 +10,7 @@ require (
 	github.com/sashabaranov/go-openai v1.36.1
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
-	gitlab.com/gitlab-org/api/client-go v0.121.0
+	gitlab.com/gitlab-org/api/client-go v0.122.0
 )
 
 require (
