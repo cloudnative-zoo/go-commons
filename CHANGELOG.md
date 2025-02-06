@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/cloudnative-zoo/go-commons/compare/v0.14.2...v1.0.0) (2025-02-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* update options and status modules ([#57](https://github.com/cloudnative-zoo/go-commons/issues/57))
+
+### Bug Fixes
+
+* update options and status modules ([#57](https://github.com/cloudnative-zoo/go-commons/issues/57)) ([797eb5f](https://github.com/cloudnative-zoo/go-commons/commit/797eb5fa349f0c79c0a4ceb4cf0ab43c7ca98d3c))
+
 ## [0.14.2](https://github.com/cloudnative-zoo/go-commons/compare/v0.14.1...v0.14.2) (2025-02-04)
 
 
