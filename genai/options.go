@@ -5,49 +5,60 @@ import (
 	"os"
 )
 
-// Options defines a function signature for configuring a GitHub Service instance.
-type Options func(*Service) error
+// Option defines a function signature for configuring a Service instance.
+type Option func(*Config) error
 
-// WithAPIKey configures the OpenAI client with the provided apiKey.
-func WithAPIKey(apiKey string) Options {
-	return func(s *Service) error {
+// WithAPIKey configures the service with the provided API key.
+func WithAPIKey(apiKey string) Option {
+	return func(c *Config) error {
 		if apiKey == "" {
 			apiKey = os.Getenv("GENAI_API_KEY")
 			if apiKey == "" {
-				return errors.New("apiKey cannot be empty. Set GENAI_API_KEY environment variable or provide a value")
+				return errors.New("API key cannot be empty")
 			}
 		}
-		s.apiKey = apiKey // pragma: allowlist secret
+		c.APIKey = apiKey
 		return nil
 	}
 }
 
-// WithModel configures the OpenAI client with the provided model.
-func WithModel(model string) Options {
-	return func(s *Service) error {
+// WithProvider sets the AI provider.
+func WithProvider(provider Provider) Option {
+	return func(c *Config) error {
+		c.Provider = provider
+		return nil
+	}
+}
+
+// WithModel overrides the default model.
+func WithModel(model string) Option {
+	return func(c *Config) error {
 		if model == "" {
 			return errors.New("model cannot be empty")
 		}
-		s.model = model
+		c.Model = model
 		return nil
 	}
 }
 
-// WithBaseURL configures the OpenAI client with the provided baseURL.
-func WithBaseURL(baseURL string) Options {
-	return func(s *Service) error {
+// WithBaseURL overrides the default base URL.
+func WithBaseURL(baseURL string) Option {
+	return func(c *Config) error {
 		if baseURL == "" {
 			return errors.New("baseURL cannot be empty")
 		}
-		s.baseURL = baseURL
+		c.BaseURL = baseURL
 		return nil
 	}
 }
 
-// WithAPIVersion configures the Azure client with the provided apiVersion.
-func WithAPIVersion(apiVersion string) Options {
-	return func(s *Service) error {
-		s.apiVersion = apiVersion
+// WithAPIVersion sets the API version (required for Azure).
+func WithAPIVersion(apiVersion string) Option {
+	return func(c *Config) error {
+		if c.Provider == ProviderAzureOpenAI && apiVersion == "" {
+			return errors.New("apiVersion is required for Azure OpenAI")
+		}
+		c.APIVersion = apiVersion
 		return nil
 	}
 }

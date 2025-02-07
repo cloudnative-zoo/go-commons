@@ -3,52 +3,42 @@ package genai
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
-	"github.com/sashabaranov/go-openai"
+	"github.com/openai/openai-go/azure"
+	"github.com/openai/openai-go/option"
+
+	"github.com/openai/openai-go"
 )
 
-// New initializes a new Service, applying any options and configuring the client.
-func New(ctx context.Context, isAzure bool, opts ...Options) (*Service, error) {
-	s := &Service{}
+// New initializes a new Service with the provided options.
+func New(ctx context.Context, opts ...Option) (*Service, error) {
+	config := &Config{
+		Provider: ProviderOpenAI, // Default provider
+	}
 
-	// Apply each option to configure the service.
+	// Apply user options
 	for _, opt := range opts {
-		if err := opt(s); err != nil {
+		if err := opt(config); err != nil {
 			return nil, fmt.Errorf("failed to apply option: %w", err)
 		}
 	}
-
-	// Declare config ahead of the if/else.
-	var config openai.ClientConfig
-
-	if isAzure {
-		// Initialize the Azure client.
-		config = openai.DefaultAzureConfig(s.apiKey, s.baseURL)
-
-		// Check if the API version is set. If not, return an error.
-		if s.apiVersion == "" {
-			return nil, errors.New("apiVersion cannot be empty for Azure API")
-		}
-		config.APIVersion = s.apiVersion
-
-		// If you use a deployment name different from the model name, you can customize the AzureModelMapperFunc function
-		config.AzureModelMapperFunc = func(model string) string {
-			azureModelMapping := map[string]string{
-				s.model: s.model,
-			}
-			return azureModelMapping[model]
-		}
+	var client *openai.Client
+	// Create client
+	if config.Provider == ProviderAzureOpenAI {
+		client = openai.NewClient(
+			azure.WithEndpoint(config.BaseURL, config.APIVersion),
+			azure.WithAPIKey(config.APIKey),
+		)
 	} else {
-		// Initialize the OpenAI client.
-		config = openai.DefaultConfig(s.apiKey)
-		// Optionally, set BaseURL if your service requires it.
-		config.BaseURL = s.baseURL
+		client = openai.NewClient(
+			option.WithBaseURL(config.BaseURL),
+			option.WithAPIKey(config.APIKey),
+		)
 	}
 
-	client := openai.NewClientWithConfig(config)
-	s.client = client
-
-	return s, nil
+	return &Service{
+		client: client,
+		config: *config,
+	}, nil
 }
