@@ -2,13 +2,14 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
 	"path"
 	"strings"
 
-	"github.com/sashabaranov/go-openai"
+	"github.com/openai/openai-go"
 
 	"github.com/cloudnative-zoo/go-commons/genai"
 	"github.com/cloudnative-zoo/go-commons/git"
@@ -74,7 +75,7 @@ func main() {
 		return
 	}
 
-	generator, err := NewCommitGenerator(ctx, AzureOpenAI)
+	generator, err := NewCommitGenerator(ctx)
 	if err != nil {
 		logger.Error("Failed to initialize commit generator", "error", err)
 		os.Exit(1)
@@ -86,49 +87,34 @@ func main() {
 	}
 }
 
-func NewCommitGenerator(ctx context.Context, provider AIProvider) (*CommitGenerator, error) {
-	config, ok := providerConfigs[provider]
-	if !ok {
-		return nil, fmt.Errorf("unsupported provider: %s. Supported providers: %v",
-			provider, getSupportedProviders())
+func NewCommitGenerator(ctx context.Context) (*CommitGenerator, error) {
+	apiKey := os.Getenv("AZURE_OPENAI_API_KEY")
+	if apiKey == "" {
+		return nil, errors.New("missing AZURE_OPENAI_API_KEY environment variable")
 	}
 
-	apiKey := os.Getenv(config.APIKeyEnvVar)
-	if apiKey == "" {
-		return nil, fmt.Errorf("missing required environment variable: %s", config.APIKeyEnvVar)
-	}
-	var isAzureOpenAI bool
-	if provider == AzureOpenAI {
-		isAzureOpenAI = true
-	} else {
-		isAzureOpenAI = false
-	}
 	aiClient, err := genai.New(
 		ctx,
-		isAzureOpenAI,
+		genai.WithProvider(genai.ProviderAzureOpenAI),
 		genai.WithAPIKey(apiKey),
-		genai.WithModel(config.DefaultModel),
-		genai.WithBaseURL(config.BaseAPIURL),
-		genai.WithAPIVersion(config.APIVersion),
+		genai.WithModel("o3-mini"),
+		genai.WithBaseURL("https://swedencentral.api.cognitive.microsoft.com/"),
+		genai.WithAPIVersion("2024-12-01-preview"),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create AI client: %w", err)
 	}
 
-	return &CommitGenerator{
-		aiClient: aiClient,
-	}, nil
+	return &CommitGenerator{aiClient: aiClient}, nil
 }
 
 func (cg *CommitGenerator) GenerateAndDisplayCommit(ctx context.Context, changes *git.StatusChanges) error {
 	prompt := buildCommitPrompt(changes)
-	messages := []openai.ChatCompletionMessage{
-		{
-			Role:    openai.ChatMessageRoleUser,
-			Content: prompt,
-		},
+	messages := []openai.ChatCompletionMessageParamUnion{
+		openai.UserMessage(prompt), // User message is content with role "user".
 	}
-	response, err := cg.aiClient.GenerateCompletion(ctx, messages)
+
+	response, err := cg.aiClient.ChatCompletion(ctx, messages)
 	if err != nil {
 		return fmt.Errorf("AI request failed: %w", err)
 	}
