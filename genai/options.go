@@ -2,7 +2,6 @@ package genai
 
 import (
 	"errors"
-	"os"
 )
 
 // Option defines a function signature for configuring a Service instance.
@@ -12,12 +11,9 @@ type Option func(*Config) error
 func WithAPIKey(apiKey string) Option {
 	return func(c *Config) error {
 		if apiKey == "" {
-			apiKey = os.Getenv("GENAI_API_KEY")
-			if apiKey == "" {
-				return errors.New("API key cannot be empty")
-			}
+			return errors.New("API key cannot be empty")
 		}
-		c.APIKey = apiKey
+		c.APIKey = apiKey // pragma: allowlist secret
 		return nil
 	}
 }

@@ -8,8 +8,8 @@ import (
 	"github.com/openai/openai-go"
 )
 
-// GenerateCompletion sends a message to the generative model.
-func (s *Service) GenerateCompletion(ctx context.Context, messages []openai.ChatCompletionMessageParamUnion) (string, error) {
+// ChatCompletion sends a message to the generative model.
+func (s *Service) ChatCompletion(ctx context.Context, messages []openai.ChatCompletionMessageParamUnion) (string, error) {
 	params := openai.ChatCompletionNewParams{
 		Messages: openai.F(messages),
 		Model:    openai.F(s.config.Model),

@@ -111,17 +111,10 @@ func NewCommitGenerator(ctx context.Context) (*CommitGenerator, error) {
 func (cg *CommitGenerator) GenerateAndDisplayCommit(ctx context.Context, changes *git.StatusChanges) error {
 	prompt := buildCommitPrompt(changes)
 	messages := []openai.ChatCompletionMessageParamUnion{
-		openai.ChatCompletionUserMessageParam{
-			Role: openai.F(openai.ChatCompletionUserMessageParamRoleUser),
-			Content: openai.F([]openai.ChatCompletionContentPartUnionParam{
-				openai.ChatCompletionContentPartTextParam{
-					Text: openai.F(prompt),
-				},
-			}),
-		},
+		openai.UserMessage(prompt), // User message is content with role "user".
 	}
 
-	response, err := cg.aiClient.GenerateCompletion(ctx, messages)
+	response, err := cg.aiClient.ChatCompletion(ctx, messages)
 	if err != nil {
 		return fmt.Errorf("AI request failed: %w", err)
 	}
