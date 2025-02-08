@@ -119,7 +119,9 @@ func (cg *CommitGenerator) GenerateAndDisplayCommit(ctx context.Context, changes
 		return fmt.Errorf("AI request failed: %w", err)
 	}
 
-	fmt.Printf("\nGenerated Commit:\n%s\n", formatResponse(response))
+	// Display usage
+	fmt.Printf("\nUsage report:\n CompletionTokens: %d\n PromptTokens: %d\n TotalTokens: %d\n", response.Usage.CompletionTokens, response.Usage.PromptTokens, response.Usage.TotalTokens)
+	fmt.Printf("\nGenerated Commit:\n%s\n", formatResponse(response.Answer))
 	return nil
 }
 
