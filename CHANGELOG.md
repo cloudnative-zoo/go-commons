@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/cloudnative-zoo/go-commons/compare/v1.1.2...v1.1.3) (2025-02-08)
+
+
+### Bug Fixes
+
+* update chat service and dependency files ([#67](https://github.com/cloudnative-zoo/go-commons/issues/67)) ([c6b474a](https://github.com/cloudnative-zoo/go-commons/commit/c6b474ae1aee72718e3943d074c99dc0676f2bd9))
+
 ## [1.1.2](https://github.com/cloudnative-zoo/go-commons/compare/v1.1.1...v1.1.2) (2025-02-07)
 
 
