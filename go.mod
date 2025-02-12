@@ -1,13 +1,13 @@
 module github.com/cloudnative-zoo/go-commons
 
-go 1.23.6
+go 1.24
 
 require (
 	github.com/bas24/googletranslatefree v0.0.0-20231117033553-f5859fe54d30
 	github.com/go-git/go-git/v5 v5.13.2
 	github.com/gofri/go-github-ratelimit v1.1.0
 	github.com/google/go-github/v69 v69.0.0
-	github.com/openai/openai-go v0.1.0-alpha.56
+	github.com/openai/openai-go v0.1.0-alpha.57
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	gitlab.com/gitlab-org/api/client-go v0.122.0
@@ -44,7 +44,7 @@ require (
 	github.com/tidwall/sjson v1.2.5 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
-	golang.org/x/net v0.34.0 // indirect
+	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/oauth2 v0.26.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
