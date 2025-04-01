@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.24.0
+    rev: v8.24.2
     hooks:
       - id: gitleaks
   - repo: https://github.com/Yelp/detect-secrets
@@ -24,7 +24,7 @@ repos:
         description: Check Spelling with codespell
         entry: codespell --exclude-file=go.sum # -L word1,word2
   - repo: https://github.com/gruntwork-io/pre-commit
-    rev: v0.1.26
+    rev: v0.1.28
     hooks:
       - id: shellcheck
       - id: gofmt

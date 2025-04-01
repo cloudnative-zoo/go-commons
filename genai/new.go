@@ -2,7 +2,6 @@
 package genai
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/openai/openai-go/azure"
@@ -12,7 +11,7 @@ import (
 )
 
 // New initializes a new Service with the provided options.
-func New(ctx context.Context, opts ...Option) (*Service, error) {
+func New(opts ...Option) (*Service, error) {
 	config := &Config{
 		Provider: ProviderOpenAI, // Default provider
 	}
@@ -23,7 +22,7 @@ func New(ctx context.Context, opts ...Option) (*Service, error) {
 			return nil, fmt.Errorf("failed to apply option: %w", err)
 		}
 	}
-	var client *openai.Client
+	var client openai.Client
 	// Create client
 	if config.Provider == ProviderAzureOpenAI {
 		client = openai.NewClient(
@@ -38,7 +37,7 @@ func New(ctx context.Context, opts ...Option) (*Service, error) {
 	}
 
 	return &Service{
-		client: client,
+		client: &client,
 		config: *config,
 	}, nil
 }

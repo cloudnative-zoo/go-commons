@@ -75,7 +75,7 @@ func main() {
 		return
 	}
 
-	generator, err := NewCommitGenerator(ctx)
+	generator, err := NewCommitGenerator()
 	if err != nil {
 		logger.Error("Failed to initialize commit generator", "error", err)
 		os.Exit(1)
@@ -87,19 +87,18 @@ func main() {
 	}
 }
 
-func NewCommitGenerator(ctx context.Context) (*CommitGenerator, error) {
-	apiKey := os.Getenv("AZURE_OPENAI_API_KEY")
+func NewCommitGenerator() (*CommitGenerator, error) {
+	apiKey := os.Getenv(providerConfigs[AzureOpenAI].APIKeyEnvVar)
 	if apiKey == "" {
 		return nil, errors.New("missing AZURE_OPENAI_API_KEY environment variable")
 	}
 
 	aiClient, err := genai.New(
-		ctx,
 		genai.WithProvider(genai.ProviderAzureOpenAI),
 		genai.WithAPIKey(apiKey),
-		genai.WithModel("o3-mini"),
-		genai.WithBaseURL("https://swedencentral.api.cognitive.microsoft.com/"),
-		genai.WithAPIVersion("2024-12-01-preview"),
+		genai.WithModel(providerConfigs[AzureOpenAI].DefaultModel),
+		genai.WithBaseURL(providerConfigs[AzureOpenAI].BaseAPIURL),
+		genai.WithAPIVersion(providerConfigs[AzureOpenAI].APIVersion),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create AI client: %w", err)
@@ -186,12 +185,4 @@ func hasChanges(changes *git.StatusChanges) bool {
 func formatResponse(response interface{}) string {
 	str := fmt.Sprintf("%v", response)
 	return strings.TrimSpace(str)
-}
-
-func getSupportedProviders() []string {
-	providers := make([]string, 0, len(providerConfigs))
-	for p := range providerConfigs {
-		providers = append(providers, string(p))
-	}
-	return providers
 }

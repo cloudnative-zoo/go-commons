@@ -17,8 +17,8 @@ type ChatCompletionResponse struct {
 func (s *Service) ChatCompletion(ctx context.Context, messages []openai.ChatCompletionMessageParamUnion) (ChatCompletionResponse, error) {
 	response := ChatCompletionResponse{}
 	params := openai.ChatCompletionNewParams{
-		Messages: openai.F(messages),
-		Model:    openai.F(s.config.Model),
+		Messages: messages,
+		Model:    s.config.Model,
 		Seed:     openai.Int(1),
 	}
 
