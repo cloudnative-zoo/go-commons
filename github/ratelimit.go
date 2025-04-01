@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/go-github/v69/github"
+	"github.com/google/go-github/v70/github"
 )
 
 // CheckRateLimit retrieves the current rate limits for the authenticated user or application.

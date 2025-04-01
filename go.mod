@@ -5,17 +5,17 @@ go 1.24
 require (
 	github.com/bas24/googletranslatefree v0.0.0-20231117033553-f5859fe54d30
 	github.com/go-git/go-git/v5 v5.14.0
-	github.com/gofri/go-github-ratelimit v1.1.0
-	github.com/google/go-github/v69 v69.2.0
-	github.com/openai/openai-go v0.1.0-alpha.61
+	github.com/gofri/go-github-ratelimit v1.1.1
+	github.com/google/go-github/v70 v70.0.0
+	github.com/openai/openai-go v0.1.0-beta.3
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
-	gitlab.com/gitlab-org/api/client-go v0.124.0
+	gitlab.com/gitlab-org/api/client-go v0.126.0
 )
 
 require (
 	dario.cat/mergo v1.0.1 // indirect
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.17.0 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.17.1 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.10.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ProtonMail/go-crypto v1.1.6 // indirect
@@ -42,12 +42,12 @@ require (
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/sjson v1.2.5 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
-	golang.org/x/crypto v0.35.0 // indirect
-	golang.org/x/net v0.35.0 // indirect
-	golang.org/x/oauth2 v0.27.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
-	golang.org/x/time v0.10.0 // indirect
+	golang.org/x/crypto v0.36.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
+	golang.org/x/oauth2 v0.28.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
+	golang.org/x/time v0.11.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
