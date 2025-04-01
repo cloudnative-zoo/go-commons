@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.6](https://github.com/cloudnative-zoo/go-commons/compare/v1.1.5...v1.1.6) (2025-04-01)
+
+
+### Bug Fixes
+
+* update dependencies and refactor context usage in service initialization ([#82](https://github.com/cloudnative-zoo/go-commons/issues/82)) ([0de152f](https://github.com/cloudnative-zoo/go-commons/commit/0de152ffe26d0868ec63908dfaeb511616fc7df5))
+
 ## [1.1.5](https://github.com/cloudnative-zoo/go-commons/compare/v1.1.4...v1.1.5) (2025-03-03)
 
 
