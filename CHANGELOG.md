@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.8](https://github.com/cloudnative-zoo/go-commons/compare/v1.1.7...v1.1.8) (2025-04-03)
+
+
+### Bug Fixes
+
+* **deps:** update go-github-ratelimit to v2.0.2 ([#88](https://github.com/cloudnative-zoo/go-commons/issues/88)) ([91d867f](https://github.com/cloudnative-zoo/go-commons/commit/91d867f4b7de8daf20661564b79f43520354a4f4))
+
 ## [1.1.7](https://github.com/cloudnative-zoo/go-commons/compare/v1.1.6...v1.1.7) (2025-04-03)
 
 
