@@ -2,10 +2,9 @@ package github
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/cloudnative-zoo/go-commons/util"
-	"github.com/gofri/go-github-ratelimit/github_ratelimit"
+	"github.com/gofri/go-github-ratelimit/v2/github_ratelimit"
 	"github.com/google/go-github/v70/github"
 )
 
@@ -25,10 +24,7 @@ func WithToken(token string) Options {
 		}
 
 		// Create a rate limiter-enabled GitHub client.
-		rateLimiter, err := github_ratelimit.NewRateLimitWaiterClient(nil)
-		if err != nil {
-			return fmt.Errorf("failed to create rate limiter: %w", err)
-		}
+		rateLimiter := github_ratelimit.NewClient(nil)
 
 		// Initialize the GitHub client with the provided token.
 		s.client = github.NewClient(rateLimiter).WithAuthToken(token)
