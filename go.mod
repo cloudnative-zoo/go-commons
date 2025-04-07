@@ -7,6 +7,7 @@ require (
 	github.com/go-git/go-git/v5 v5.14.0
 	github.com/gofri/go-github-ratelimit/v2 v2.0.2
 	github.com/google/go-github/v70 v70.0.0
+	github.com/google/go-github/v71 v71.0.0
 	github.com/openai/openai-go v0.1.0-beta.5
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
