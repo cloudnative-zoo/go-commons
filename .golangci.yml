@@ -1,121 +1,122 @@
+version: "2"
 run:
+  concurrency: 4
   build-tags:
     - integration
-  timeout: 10m
-  concurrency: 4
   issues-exit-code: 1
 linters:
-  disable-all: true
   enable:
+    - bodyclose
+    - copyloopvar
     - dogsled
     - dupl
-    - gocritic
-    - godot
-    - gofmt
-    - goimports
-    - gosec
-    - misspell
-    - nakedret
-    - perfsprint
-    - paralleltest
-    - revive
-    - stylecheck
-    - tparallel
-    - unconvert
-    - unparam
-    - whitespace
-    - bodyclose
     - errcheck
-    - copyloopvar
     - funlen
     - gochecknoinits
     - goconst
+    - gocritic
     - gocyclo
-    - mnd
+    - godot
     - goprintffuncname
-    - gosimple
+    - gosec
     - govet
     - ineffassign
     - lll
+    - misspell
+    - mnd
+    - nakedret
     - noctx
     - nolintlint
-    - typecheck
+    - paralleltest
+    - perfsprint
+    - revive
+    - staticcheck
+    - tparallel
+    - unconvert
+    - unparam
     - unused
-linters-settings:
-  errcheck:
-    # report about not checking of errors in type assertions: `a := b.(MyStruct)`;
-    check-type-assertions: false
-  gocyclo:
-    min-complexity: 18
-  lll:
-    line-length: 300
-  gocritic:
-    disable-all: true
-    enabled-checks:
-      - commentFormatting
-  gosec:
-    excludes:
-      # duplicates errcheck
-      - G104
-      # int(os.Stdin.Fd())
-      - G115
-  perfsprint:
-    errorf: true
-    strconcat: false
-  revive:
+    - whitespace
+  settings:
+    errcheck:
+      check-type-assertions: false
+    gocritic:
+      disable-all: true
+      enabled-checks:
+        - commentFormatting
+    gocyclo:
+      min-complexity: 18
+    gosec:
+      excludes:
+        - G104
+        - G115
+    lll:
+      line-length: 300
+    perfsprint:
+      errorf: true
+      strconcat: false
+    revive:
+      rules:
+        - name: blank-imports
+        - name: bool-literal-in-expr
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: early-return
+        - name: empty-block
+        - name: error-naming
+        - name: error-return
+        - name: error-strings
+        - name: errorf
+        - name: filename-format
+          arguments:
+            - ^[_a-z][_a-z0-9]*.go$
+        - name: increment-decrement
+        - name: indent-error-flow
+        - name: package-comments
+        - name: range
+        - name: receiver-naming
+        - name: redefines-builtin-id
+        - name: superfluous-else
+        - name: time-equal
+        - name: time-naming
+        - name: unexported-naming
+        - name: unexported-return
+        - name: unreachable-code
+        - name: var-declaration
+        - name: var-naming
+  exclusions:
+    generated: lax
     rules:
-      - name: blank-imports
-      - name: bool-literal-in-expr
-      - name: context-as-argument
-      - name: context-keys-type
-      - name: dot-imports
-      - name: early-return
-      - name: empty-block
-      - name: error-naming
-      - name: error-return
-      - name: error-strings
-      - name: errorf
-      - name: filename-format
-        arguments:
-          - "^[_a-z][_a-z0-9]*.go$"
-      - name: increment-decrement
-      - name: indent-error-flow
-      - name: package-comments
-      - name: range
-      - name: receiver-naming
-      - name: redefines-builtin-id
-      - name: superfluous-else
-      - name: time-equal
-      - name: time-naming
-      - name: unexported-naming
-      - name: unexported-return
-      - name: unreachable-code
-      - name: var-declaration
-      - name: var-naming
-issues:
-  exclude-use-default: false
-  exclude-rules:
-    - linters:
-        - dupl
-        - unparam
-        - gosec
-        - dogsled
-      path: _test\.go
-
-    # We need to use sha1 for validating signatures
-    - linters: [ gosec ]
-      text: 'G505: Blocklisted import crypto/sha1: weak cryptographic primitive'
-
-    # This is adapted from golangci-lint's default exclusions. It disables linting for error checks on
-    # os.RemoveAll, fmt.Fprint*, fmt.Scanf, and any function ending in "Close".
-    - linters: [ errcheck ]
-      text: Error return value of .(.*Close|fmt\.Fprint.*|fmt\.Scanf|os\.Remove(All)?). is not checked
-
-    # We don't care about file inclusion via variable in examples or internal tools.
-    - linters: [ gosec ]
-      text: 'G304: Potential file inclusion via variable'
-      path: '^(_examples|tools)\/'
-
-    # Because fmt.Sprint(reset.Unix())) is more readable than strconv.FormatInt(reset.Unix(), 10).
-    - linters: [ perfsprint ]
-      text: 'fmt.Sprint.* can be replaced with faster strconv.FormatInt'
+      - linters:
+          - dogsled
+          - dupl
+          - gosec
+          - unparam
+        path: _test\.go
+      - linters:
+          - gosec
+        text: 'G505: Blocklisted import crypto/sha1: weak cryptographic primitive'
+      - linters:
+          - errcheck
+        text: Error return value of .(.*Close|fmt\.Fprint.*|fmt\.Scanf|os\.Remove(All)?). is not checked
+      - linters:
+          - gosec
+        path: ^(_examples|tools)\/
+        text: 'G304: Potential file inclusion via variable'
+      - linters:
+          - perfsprint
+        text: fmt.Sprint.* can be replaced with faster strconv.FormatInt
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

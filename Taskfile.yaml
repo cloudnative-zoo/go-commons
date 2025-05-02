@@ -45,7 +45,7 @@ tasks:
     ignore_error: true
     cmds:
       - echo "Running golangci-lint..."
-      - golangci-lint run --out-format colored-line-number || (echo "golangci-lint failed"; exit 1)
+      - golangci-lint run || (echo "golangci-lint failed"; exit 1)
       - echo "golangci-lint completed successfully"
 
   lint-fmt:
