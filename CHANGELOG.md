@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/cloudnative-zoo/go-commons/compare/v1.1.10...v1.2.0) (2025-05-09)
+
+
+### Features
+
+* add git service methods for diff, commit, push, and change tracking ([#99](https://github.com/cloudnative-zoo/go-commons/issues/99)) ([7bb6319](https://github.com/cloudnative-zoo/go-commons/commit/7bb63199aa2718914d82471d50313ab8e714b52d))
+
 ## [1.1.10](https://github.com/cloudnative-zoo/go-commons/compare/v1.1.9...v1.1.10) (2025-05-09)
 
 
