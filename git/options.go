@@ -2,6 +2,8 @@ package git
 
 import (
 	"errors"
+	"fmt"
+	"path/filepath"
 
 	"github.com/go-git/go-git/v5/plumbing/protocol/packp/sideband"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
@@ -72,7 +74,12 @@ func WithRepoPath(path string) Options {
 		if path == "" {
 			return errors.New("repo path cannot be empty")
 		}
-		s.path = path
+		// Ensure the path is absolute
+		absPath, err := filepath.Abs(path)
+		if err != nil {
+			return fmt.Errorf("failed to get absolute path: %w", err)
+		}
+		s.path = absPath
 		return nil
 	}
 }
