@@ -11,7 +11,7 @@ require (
 	github.com/openai/openai-go v0.1.0-beta.10
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
-	gitlab.com/gitlab-org/api/client-go v0.128.0
+	gitlab.com/gitlab-org/api/client-go v0.129.0
 )
 
 require (
