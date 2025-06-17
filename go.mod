@@ -8,7 +8,7 @@ require (
 	github.com/gobwas/glob v0.2.3
 	github.com/gofri/go-github-ratelimit/v2 v2.0.2
 	github.com/google/go-github/v72 v72.0.0
-	github.com/openai/openai-go v1.1.0
+	github.com/openai/openai-go v1.6.0
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	gitlab.com/gitlab-org/api/client-go v0.129.0
