@@ -4,14 +4,14 @@ go 1.24
 
 require (
 	github.com/bas24/googletranslatefree v0.0.0-20231117033553-f5859fe54d30
-	github.com/go-git/go-git/v5 v5.16.0
+	github.com/go-git/go-git/v5 v5.16.2
 	github.com/gobwas/glob v0.2.3
 	github.com/gofri/go-github-ratelimit/v2 v2.0.2
 	github.com/google/go-github/v72 v72.0.0
-	github.com/openai/openai-go v1.1.0
+	github.com/openai/openai-go v1.8.2
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
-	gitlab.com/gitlab-org/api/client-go v0.129.0
+	gitlab.com/gitlab-org/api/client-go v0.130.1
 )
 
 require (
