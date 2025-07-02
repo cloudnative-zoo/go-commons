@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/cloudnative-zoo/go-commons/compare/v1.2.2...v1.2.3) (2025-07-02)
+
+
+### Bug Fixes
+
+* **deps:** update module gitlab.com/gitlab-org/api/client-go to v0.131.0 ([#112](https://github.com/cloudnative-zoo/go-commons/issues/112)) ([fcbff0b](https://github.com/cloudnative-zoo/go-commons/commit/fcbff0b9633f3a088037390f01a07a6e3c5611cf))
+
 ## [1.2.2](https://github.com/cloudnative-zoo/go-commons/compare/v1.2.1...v1.2.2) (2025-07-01)
 
 
