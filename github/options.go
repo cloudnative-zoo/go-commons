@@ -3,21 +3,22 @@ package github
 import (
 	"errors"
 
-	"github.com/cloudnative-zoo/go-commons/util"
+	"github.com/cloudnative-zoo/go-commons/utilities"
 	"github.com/gofri/go-github-ratelimit/v2/github_ratelimit"
-	"github.com/google/go-github/v72/github"
+	"github.com/google/go-github/v73/github"
 )
 
 // Options defines a function signature for configuring a GitHub Service instance.
 type Options func(*Service) error
 
 // WithToken sets up authentication for the GitHub client using a personal access token.
-// The token can be provided directly or sourced from environment variables.
+// WithToken returns an option that configures the GitHub service client to use the provided personal access token for authentication.
+// If the token is empty, it attempts to retrieve one from common environment variables. Returns an error if no token is found.
 func WithToken(token string) Options {
 	return func(s *Service) error {
 		if token == "" {
 			// Fetch token from environment variables if not provided.
-			token = util.GetEnv("GH_TOKEN", "GITHUB_TOKEN", "GITHUB_API_TOKEN", "GITHUB_OAUTH_TOKEN")
+			token = utilities.GetEnv("GH_TOKEN", "GITHUB_TOKEN", "GITHUB_API_TOKEN", "GITHUB_OAUTH_TOKEN")
 			if token == "" {
 				return errors.New("GitHub token is required: provide a token or set the GH_TOKEN, GITHUB_TOKEN, GITHUB_API_TOKEN, or GITHUB_OAUTH_TOKEN environment variable")
 			}
