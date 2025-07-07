@@ -12,7 +12,8 @@ import (
 type Options func(*Service) error
 
 // WithToken sets up authentication for the GitHub client using a personal access token.
-// The token can be provided directly or sourced from environment variables.
+// WithToken returns an option that configures the GitHub service client to use the provided personal access token for authentication.
+// If the token is empty, it attempts to retrieve one from common environment variables. Returns an error if no token is found.
 func WithToken(token string) Options {
 	return func(s *Service) error {
 		if token == "" {
