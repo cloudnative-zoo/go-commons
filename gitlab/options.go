@@ -13,7 +13,9 @@ import (
 type Options func(*Service) error
 
 // WithToken sets up authentication for the Gitlab client using a personal access token.
-// The token can be provided directly or sourced from environment variables.
+// WithToken configures the service to authenticate with Gitlab using a personal access token.
+// The token can be provided directly or sourced from the GITLAB_TOKEN or GITLAB_API_TOKEN environment variables.
+// Returns an error if no valid token is found or if the Gitlab client cannot be initialized.
 func WithToken(token string) Options {
 	return func(s *Service) error {
 		if token == "" {
