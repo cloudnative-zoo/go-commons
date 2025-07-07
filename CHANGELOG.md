@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.3](https://github.com/cloudnative-zoo/go-commons/compare/v1.2.2...v1.2.3) (2025-07-07)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/google/go-github/v72 to v73 ([#110](https://github.com/cloudnative-zoo/go-commons/issues/110)) ([87e5bce](https://github.com/cloudnative-zoo/go-commons/commit/87e5bce4ea21a466d16e4875b387ff66f0a6df47))
+* **deps:** update module gitlab.com/gitlab-org/api/client-go to v0.131.0 ([#112](https://github.com/cloudnative-zoo/go-commons/issues/112)) ([fcbff0b](https://github.com/cloudnative-zoo/go-commons/commit/fcbff0b9633f3a088037390f01a07a6e3c5611cf))
+* **deps:** update module gitlab.com/gitlab-org/api/client-go to v0.133.0 ([#114](https://github.com/cloudnative-zoo/go-commons/issues/114)) ([1243237](https://github.com/cloudnative-zoo/go-commons/commit/124323700f4a419d366f6e0fd6e230d991065f6a))
+* rename package from util to utilities and update dependencies ([#115](https://github.com/cloudnative-zoo/go-commons/issues/115)) ([2c79830](https://github.com/cloudnative-zoo/go-commons/commit/2c798306d5508cd4cdb177f2e90809b3f9075f38))
+
 ## [1.2.2](https://github.com/cloudnative-zoo/go-commons/compare/v1.2.1...v1.2.2) (2025-07-01)
 
 
