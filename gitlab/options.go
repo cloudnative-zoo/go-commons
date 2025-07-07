@@ -6,7 +6,7 @@ import (
 
 	gitlab "gitlab.com/gitlab-org/api/client-go"
 
-	"github.com/cloudnative-zoo/go-commons/util"
+	"github.com/cloudnative-zoo/go-commons/utilities"
 )
 
 // Options defines a function signature for configuring a Gitlab Service instance.
@@ -18,7 +18,7 @@ func WithToken(token string) Options {
 	return func(s *Service) error {
 		if token == "" {
 			// Fetch token from environment variables if not provided.
-			token = util.GetEnv("GITLAB_TOKEN", "GITLAB_API_TOKEN")
+			token = utilities.GetEnv("GITLAB_TOKEN", "GITLAB_API_TOKEN")
 			if token == "" {
 				return errors.New("a valid token must be provided directly or via environment variables (GITLAB_TOKEN, GITLAB_API_TOKEN)")
 			}
