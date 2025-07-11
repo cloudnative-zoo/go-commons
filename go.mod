@@ -8,10 +8,10 @@ require (
 	github.com/gobwas/glob v0.2.3
 	github.com/gofri/go-github-ratelimit/v2 v2.0.2
 	github.com/google/go-github/v73 v73.0.0
-	github.com/openai/openai-go v1.8.2
+	github.com/openai/openai-go v1.10.1
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
-	gitlab.com/gitlab-org/api/client-go v0.133.0
+	gitlab.com/gitlab-org/api/client-go v0.134.0
 )
 
 require (
